@@ -1,0 +1,88 @@
+Table ROLES {
+  id_rol INT [pk, increment]
+  nombre_rol VARCHAR(50)
+}
+
+Table USUARIOS {
+  id_usuario INT [pk, increment]
+  nombre VARCHAR(100)
+  correo VARCHAR(100) [unique]
+  contraseña VARCHAR(255)
+  id_rol INT
+  estado BOOLEAN
+  fecha_registro DATETIME
+}
+
+Table NIÑOS {
+  id_niño INT [pk, increment]
+  nombre VARCHAR(100)
+  fecha_nacimiento DATE
+  id_usuario_padre INT
+}
+
+Table PROGRAMAS_EDUCATIVOS {
+  id_programa INT [pk, increment]
+  titulo VARCHAR(100)
+  descripcion TEXT
+  nivel VARCHAR(50)
+  fecha_inicio DATE
+  fecha_fin DATE
+  estado BOOLEAN
+}
+
+Table MATRICULA {
+  id_matricula INT [pk, increment]
+  id_niño INT
+  id_programa INT
+  fecha_matricula DATE
+}
+
+Table HISTORIAL_MATRICULA {
+  id_historial INT [pk, increment]
+  id_matricula INT
+  fecha_cambio DATE
+  observaciones TEXT
+  estado VARCHAR(50)
+}
+
+Table CITAS {
+  id_cita INT [pk, increment]
+  id_usuario INT
+  fecha_cita DATETIME
+  motivo TEXT
+  estado VARCHAR(50)
+}
+
+Table ASISTENCIA {
+  id_asistencia INT [pk, increment]
+  id_niño INT
+  fecha DATE
+  presente BOOLEAN
+  observaciones TEXT
+}
+
+Table CONTACTO {
+  id_contacto INT [pk, increment]
+  nombre VARCHAR(100)
+  correo VARCHAR(100)
+  mensaje TEXT
+  fecha_envio DATETIME
+}
+
+Table AUDITORIA {
+  id_auditoria INT [pk, increment]
+  id_usuario INT
+  accion VARCHAR(100)
+  modulo VARCHAR(100)
+  fecha DATETIME
+  descripcion TEXT
+}
+
+Ref: USUARIOS.id_rol > ROLES.id_rol
+Ref: NIÑOS.id_usuario_padre > USUARIOS.id_usuario
+Ref: MATRICULA.id_niño > NIÑOS.id_niño
+Ref: MATRICULA.id_programa > PROGRAMAS_EDUCATIVOS.id_programa
+Ref: HISTORIAL_MATRICULA.id_matricula > MATRICULA.id_matricula
+Ref: CITAS.id_usuario > USUARIOS.id_usuario
+Ref: ASISTENCIA.id_niño > NIÑOS.id_niño
+Ref: AUDITORIA.id_usuario > USUARIOS.id_usuario
