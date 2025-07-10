@@ -104,21 +104,35 @@
                     + Agregar otro hijo
                 </button>
 
+            <!-- Comentarios -->
+            <div class="text-start">
+                <label for="mensaje" class="form-label"> Comentarios o Preguntas:</label><br>
+                <textarea name="mensaje" id="mensaje" class="form-control" maxlength="300" rows="4"></textarea>
+            </div> 
+
+            <div class="text-end mb-3">
+                <span id="contador">0/300</span>
+            </div>                
+
 
                 <!-- Checkbox de Términos -->
                 <section class="form-check text-start px-3.1 mb-3 ">
-                    <input class="form-check-input" type="checkbox" id="terminos" name="terminos">
+                    <input class="form-check-input" type="checkbox" id="terminos" name="terminos" required>
                     <label class="form-check-label" for="terminos">
                         Acepto los <a href="#">Términos y Condiciones</a>
                     </label>
                 </section>
+
+
+                <button type="button" class="btn btn-primary mt-2 mb-3 btn-sm">Enviar</button>
             </div>
+
 
 
         </div>
     </div>
 
-
+<script src="../scripts/Matricula.js"></script>
 </body>
 
 </html>
