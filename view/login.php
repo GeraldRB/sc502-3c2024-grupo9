@@ -26,7 +26,12 @@
 <body>
 
   <div class="card">
-    <h3 class="text-center mb-4">Iniciar Sesión</h3>
+    <h3 class="text-center mb-3">Iniciar Sesión</h3>
+
+    <?php if (isset($_GET['error']) && $_GET['error'] == 1): ?>
+      <div class="alert alert-danger text-center">Correo o contraseña incorrectos</div>
+    <?php endif; ?>
+
     <form method="POST" action="../controller/login.php">
       <div class="mb-3">
         <label for="correo" class="form-label">Correo electrónico</label>
@@ -40,8 +45,9 @@
         <button type="submit" class="btn btn-primary">Ingresar</button>
       </div>
     </form>
+
     <div class="text-center mt-3">
-      <span>¿No tienes cuenta? <a href="registro.html">Regístrate</a></span>
+      <span>¿No tienes cuenta? <a href="registro.php">Regístrate</a></span>
     </div>
   </div>
 
