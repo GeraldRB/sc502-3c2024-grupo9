@@ -26,8 +26,17 @@
 <body>
 
   <div class="card">
-    <h3 class="text-center mb-4">Registro de Usuario</h3>
-    <form method="POST" action="../controller/register.php">
+    <h3 class="text-center mb-3">Registro de Usuario</h3>
+
+    <?php if (isset($_GET['existe'])): ?>
+      <div class="alert alert-warning text-center">El correo ya está registrado.</div>
+    <?php elseif (isset($_GET['ok'])): ?>
+      <div class="alert alert-success text-center">¡Usuario registrado con éxito!</div>
+    <?php elseif (isset($_GET['error'])): ?>
+      <div class="alert alert-danger text-center">Hubo un error al registrar el usuario.</div>
+    <?php endif; ?>
+
+    <form method="POST" action="../controller/registro.php">
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre completo</label>
         <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -45,7 +54,7 @@
       </div>
     </form>
     <div class="text-center mt-3">
-      <span>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></span>
+      <span>¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a></span>
     </div>
   </div>
 

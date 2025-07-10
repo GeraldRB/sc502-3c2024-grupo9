@@ -40,7 +40,7 @@
         <div class="card p-4">
           <i class="bi bi-heart-pulse-fill"></i>
           <h5 class="card-title">Servicios</h5>
-          <a href="#" class="btn btn-outline-primary mt-2">Ir</a>
+          <a href="consejosRecomendacions.html" class="btn btn-outline-primary mt-2">Ir</a>
         </div>
       </div>
 
@@ -48,7 +48,7 @@
         <div class="card p-4">
           <i class="bi bi-person-plus-fill"></i>
           <h5 class="card-title">Matrícula</h5>
-          <a href="#" class="btn btn-outline-primary mt-2">Ir</a>
+          <a href="matricula.html" class="btn btn-outline-primary mt-2">Ir</a>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
         <div class="card p-4">
           <i class="bi bi-journal-text"></i>
           <h5 class="card-title">Programas Educativos</h5>
-          <a href="#" class="btn btn-outline-primary mt-2">Ir</a>
+          <a href="primero.html" class="btn btn-outline-primary mt-2">Ir</a>
         </div>
       </div>
 
@@ -64,7 +64,7 @@
         <div class="card p-4">
           <i class="bi bi-calendar-event-fill"></i>
           <h5 class="card-title">Citas</h5>
-          <a href="#" class="btn btn-outline-primary mt-2">Ir</a>
+          <a href="citas.html" class="btn btn-outline-primary mt-2">Ir</a>
         </div>
       </div>
 
@@ -72,7 +72,7 @@
         <div class="card p-4">
           <i class="bi bi-book-fill"></i>
           <h5 class="card-title">Programas</h5>
-          <a href="#" class="btn btn-outline-primary mt-2">Ir</a>
+          <a href="programa.html" class="btn btn-outline-primary mt-2">Ir</a>
         </div>
       </div>
 
@@ -80,7 +80,7 @@
         <div class="card p-4">
           <i class="bi bi-envelope-fill"></i>
           <h5 class="card-title">Contacto</h5>
-          <a href="#" class="btn btn-outline-primary mt-2">Ir</a>
+          <a href="contacto.html" class="btn btn-outline-primary mt-2">Ir</a>
         </div>
       </div>
 
