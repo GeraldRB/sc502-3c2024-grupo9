@@ -116,11 +116,11 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="consejosRecomendacions.html">Servicios</a></li>
+        <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
         <li class="nav-item"><a class="nav-link" href="matricula.html">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link" href="primero.html">Programas Educativos</a></li>
+        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
         <li class="nav-item"><a class="nav-link" href="citas.html">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="programa.html">Programas</a></li>
+        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
       </ul>
     </div>
