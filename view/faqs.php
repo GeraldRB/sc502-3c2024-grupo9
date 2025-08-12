@@ -101,7 +101,7 @@
         <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
         <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <li class="nav-item"><a class="nav-link" href="listaProgramas.php">Lista de Programas</a></li>
+        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
       </ul>
     </div>
   </nav>
