@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendar Cita</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+          <h3 class="mb-3 text-center">Agendar Cita</h3>
+
+          <?php if (isset($_GET["ok"])): ?>
+            <div class="alert alert-success">Cita creada correctamente.</div>
+          <?php elseif (isset($_GET["err"])): 
+              $map = [
+                "campos"=>"Completá todos los campos.",
+                "pasado"=>"La fecha/hora debe ser futura.",
+                "choque"=>"Ya tenés una cita en esa fecha/hora.",
+                "ins"=>"No se pudo guardar la cita.",
+                "ex"=>"Error inesperado. Intenta de nuevo."
+              ];
+              $msg = $map[$_GET["err"]] ?? "Error.";
+          ?>
+            <div class="alert alert-danger"><?php echo $msg; ?></div>
+          <?php endif; ?>
+
+          <form method="POST" action="../controller/citas.php">
+            <div class="mb-3">
+              <label for="cedula_encargado" class="form-label">Cédula del Encargado</label>
+              <input type="text" class="form-control" id="cedula_encargado" name="cedula_encargado" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="cedula_nino" class="form-label">Cédula del Niño</label>
+              <input type="text" class="form-control" id="cedula_nino" name="cedula_nino" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="fecha_cita" class="form-label">Fecha y hora de la cita</label>
+              <input type="text" class="form-control" id="fecha_cita" name="fecha_cita" placeholder="Seleccioná fecha y hora" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="motivo" class="form-label">Motivo de la cita</label>
+              <select class="form-select" id="motivo" name="motivo" required>
+                <option value="">Seleccione un motivo</option>
+                <option>Consulta de programas</option>
+                <option>Pagos</option>
+                <option>Información general</option>
+                <option>Reclamos</option>
+                <option>Otros</option>
+              </select>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Agendar Cita</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-md-6 mt-4 mt-md-0">
+        <div class="card p-4 shadow-sm">
+          <h4 class="mb-3">Mis próximas citas</h4>
+          <ul class="list-group">
+          <?php
+            require_once("../accesoDatos/conexion.php");
+            try {
+              $cn = abrirConexion();
+              $idUsuario = 1; // reemplazar por $_SESSION['id_usuario'] cuando usen login
+              $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
+              $q->bind_param("i", $idUsuario);
+              $q->execute();
+              $res = $q->get_result();
+              if ($res->num_rows === 0){
+                echo '<li class="list-group-item">No tenés citas próximas.</li>';
+              } else {
+                while($row = $res->fetch_assoc()){
+                  echo '<li class="list-group-item">';
+                  echo '<strong>'.htmlspecialchars($row["motivo"]).'</strong> — ';
+                  echo $row["fecha_cita"].' <span class="badge bg-secondary ms-2">'.$row["estado"].'</span>';
+                  echo '</li>';
+                }
+              }
+            } catch (Exception $e) {
+              echo '<li class="list-group-item text-danger">No se pudieron cargar las citas.</li>';
+            } finally {
+              if (isset($cn)) cerrarConexion($cn);
+            }
+          ?>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#fecha_cita", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      time_24hr: true,
+      minDate: "today"
+    });
+  </script>
+</body>
+</html>
