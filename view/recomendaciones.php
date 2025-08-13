@@ -67,7 +67,7 @@
   <main>
     <section class="page-header container">
       <h1>Consejos y <span class="brand-accent">Recomendaciones</span></h1>
-      <p>Estos son algunos de los consejos que <strong>Guarderia.com</strong> tiene para ti.</p>
+      <p>Estos son algunos de los consejos que la guarderia <strong>Ministerio de la Misericordia</strong> tiene para ti.</p>
     </section>
 
     <div class="container">
