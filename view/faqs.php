@@ -47,6 +47,7 @@
         <li class="nav-item"><a class="nav-link" href="citas.html">Citas</a></li>
         <li class="nav-item"><a class="nav-link" href="programa.html">Programas Educativos</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="padres.php">Padres</a></li>
       </ul>
     </div>
   </nav>
