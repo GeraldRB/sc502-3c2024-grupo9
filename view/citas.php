@@ -35,6 +35,7 @@
         <li class="nav-item"><a class="nav-link active" href="citas.php">Citas</a></li>
         <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="padres.php">Padres</a></li>
       </ul>
     </div>
   </nav>
