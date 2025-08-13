@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Guardería Ministerio de la Misericordia</title>
@@ -23,7 +24,7 @@
 
     .navbar {
       background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
     .navbar-brand img {
@@ -42,10 +43,11 @@
     main::before {
       content: "";
       position: absolute;
-      top: 0; left: 0;
+      top: 0; 
+      left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(255,255,255,0.6);
+      background-color: rgba(255, 255, 255, 0.6);
       z-index: 1;
     }
 
@@ -55,7 +57,7 @@
       text-align: center;
       max-width: 800px;
       padding: 20px;
-      background-color: rgba(255,255,255,0.85);
+      background-color: rgba(255, 255, 255, 0.85);
       border-radius: 12px;
     }
 
@@ -99,12 +101,14 @@
       .hero-content h1 {
         font-size: 1.8rem;
       }
+
       .hero-content p {
         font-size: 1rem;
       }
     }
   </style>
 </head>
+
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-light px-4">
@@ -116,12 +120,13 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.html">Matrícula</a></li>
+        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
+        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.html">Citas</a></li>
+        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
         <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
       </ul>
     </div>
   </nav>
@@ -130,7 +135,7 @@
     <div class="hero-content">
       <h1>Bienvenido al Centro de Atención Integral</h1>
       <p>Ministerio de la Misericordia - Parte de la Red Nacional de Cuido y Desarrollo Infantil (REDCUDI)</p>
-      <a href="matricula.html" class="btn">Matricúlate ahora</a>
+      <a href="matricula.php" class="btn">Matricúlate ahora</a>
     </div>
   </main>
 
@@ -145,4 +150,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

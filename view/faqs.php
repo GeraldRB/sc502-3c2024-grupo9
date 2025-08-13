@@ -1,3 +1,4 @@
+<!-- view/faqs.php -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -42,11 +43,12 @@
     <div id="nav" class="collapse navbar-collapse justify-content-end">
       <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.html">Matrícula</a></li>
+        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.html">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="programa.html">Programas Educativos</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
       </ul>
     </div>
   </nav>
@@ -193,18 +195,18 @@
         </div>
       </div>
 
-        <div class="accordion-item" data-keywords="materiales uniforme mochila rotular lista utiles">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q11">
-                    <i class="fa-solid fa-box-open me-2 text-warning"></i> ¿Qué materiales deben traer?
-                </button>
+      <div class="accordion-item" data-keywords="materiales uniforme mochila rotular lista utiles">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q11">
+            <i class="fa-solid fa-box-open me-2 text-warning"></i> ¿Qué materiales deben traer?
+          </button>
         </h2>
         <div id="q11" class="accordion-collapse collapse" data-bs-parent="#faqs">
-            <div class="accordion-body">
-              Mochila rotulada, muda de ropa, pañales (si usa), toallitas y botella de agua. El resto se informa por nivel al inicio de periodo.
-            </div>
-            </div>
+          <div class="accordion-body">
+            Mochila rotulada, muda de ropa, pañales (si usa), toallitas y botella de agua. El resto se informa por nivel al inicio de periodo.
+          </div>
         </div>
+      </div>
 
       <div class="accordion-item" data-keywords="visitas recorrido instalaciones">
         <h2 class="accordion-header">
@@ -258,11 +260,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById("searchFaq").addEventListener("input", function() {
+    document.getElementById("searchFaq").addEventListener("input", function () {
       let term = this.value.toLowerCase();
       document.querySelectorAll(".accordion-item").forEach(item => {
         let keywords = item.getAttribute("data-keywords");
-        if(keywords && keywords.toLowerCase().includes(term)){
+        if (keywords && keywords.toLowerCase().includes(term)) {
           item.style.display = "";
         } else {
           item.style.display = term === "" ? "" : "none";
