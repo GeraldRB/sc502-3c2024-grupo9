@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Programas Educativos</title>
 
-
   <link rel="stylesheet" href="Css/stilos.css">
-
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f9ff;
+    }
+
     .navbar {
       background-color: #fff;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -26,53 +25,34 @@
       height: 50px;
     }
 
-
     main {
       flex: 1;
       background: url("../public/backgraund.jpg") center no-repeat;
-      background-size: 100%;
+      background-size: cover;
       min-height: 80vh;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-
-
     }
-
 
     main::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(255, 255, 255, 0.8);
-      /* Opacidad */
       z-index: 1;
     }
 
-    main>* {
+    main > * {
       position: relative;
       z-index: 2;
     }
 
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f0f9ff;
-      /* height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center; */
-
-
-    }
-
     .card {
       padding: 2rem;
-      margin-top: 3px;
       width: 100%;
       max-width: 480px;
       border-radius: 1rem;
@@ -95,7 +75,6 @@
       border-color: #198c85;
     }
 
-
     footer {
       background-color: #20b2aa;
       color: white;
@@ -114,7 +93,6 @@
       }
     }
   </style>
-
 </head>
 
 <body class="bg-light">
@@ -139,19 +117,20 @@
     </div>
   </nav>
 
-  <main class="shadow">
-    <div class="card p-4 shadow-lg mb-5">
+  <main class="shadow p-4">
+    <div class="container py-4">
+      <div class="text-center mb-4">
+        <h1 class="fw-bold">Gestión de Programas Educativos</h1>
+        <p class="lead">Agregá, editá o eliminá los programas ofrecidos por la guardería</p>
+      </div>
 
-      <form id="formPrograma" method="POST" action="../controller/programa.php">
-        <input type="hidden" id="id_programa" />
+      <div class="card p-4 shadow-lg mb-5">
+        <form id="formPrograma" method="POST" action="../controller/programa.php">
+          <input type="hidden" id="id_programa" name="id_programa" />
 
+          <img src="../public/logo.jpg" alt="REDCUDI Logo" class="logo">
 
-        <div class="mb-3">
-
-
-          <div class="">
-            <img src="../public/logo.jpg" alt="REDCUDI Logo" class="logo">
-
+          <div class="mb-3">
             <label for="titulo" class="form-label">Título del Programa</label>
             <input type="text" class="form-control" id="titulo" name="titulo" required>
           </div>
@@ -183,13 +162,29 @@
           </div>
 
           <button type="submit" class="btn btn-success w-100">Guardar Programa</button>
-      </form>
+        </form>
+      </div>
+
+      <div>
+        <h2 class="fw-bold text-center mb-3">Lista de Programas</h2>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Título</th>
+                <th>Nivel</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaProgramas"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <!-- Dcomuentar -->
-    <div>
-
   </main>
-
 
   <footer>
     <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
@@ -199,9 +194,8 @@
     <p><strong>Teléfono:</strong> 2221-7722</p>
     <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
   </footer>
+
   <script src="programa.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
-
 </html>

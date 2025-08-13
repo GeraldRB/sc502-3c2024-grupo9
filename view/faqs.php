@@ -1,6 +1,6 @@
+<!-- view/faqs.php -->
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,82 +8,29 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f7f9fb;
-    }
+    body{ font-family:'Poppins',sans-serif; background:#f7f9fb; }
+    .navbar{ background:#fff; box-shadow:0 4px 6px rgba(0,0,0,.05); }
+    .navbar-brand img{ height:50px; }
 
-    .navbar {
-      background: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, .05);
-    }
+    .page-header{ padding:40px 0 10px; text-align:center; }
+    .page-header h1{ font-weight:700; margin-bottom:.5rem; }
+    .page-header p{ color:#666; margin:0; }
+    .brand-accent{ color:#20b2aa; }
 
-    .navbar-brand img {
-      height: 50px;
-    }
+    .faq-search{ max-width:820px; margin: 12px auto 25px; }
 
-    .page-header {
-      padding: 40px 0 10px;
-      text-align: center;
-    }
+    .accordion{ max-width: 900px; margin: 0 auto 40px; }
+    .accordion-item{ border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.05); margin-bottom:12px; }
+    .accordion-button:focus{ box-shadow:none; }
+    .accordion-button:not(.collapsed){ background:#e8f7f6; color:#0f6f6a; }
 
-    .page-header h1 {
-      font-weight: 700;
-      margin-bottom: .5rem;
-    }
-
-    .page-header p {
-      color: #666;
-      margin: 0;
-    }
-
-    .brand-accent {
-      color: #20b2aa;
-    }
-
-    .faq-search {
-      max-width: 820px;
-      margin: 12px auto 25px;
-    }
-
-    .accordion {
-      max-width: 900px;
-      margin: 0 auto 40px;
-    }
-
-    .accordion-item {
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
-      margin-bottom: 12px;
-    }
-
-    .accordion-button:focus {
-      box-shadow: none;
-    }
-
-    .accordion-button:not(.collapsed) {
-      background: #e8f7f6;
-      color: #0f6f6a;
-    }
-
-    footer {
-      background: #20b2aa;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-
-    footer p {
-      margin: 4px 0;
-      font-size: .95rem;
-    }
+    footer{ background:#20b2aa; color:#fff; padding:20px; text-align:center; }
+    footer p{ margin:4px 0; font-size:.95rem; }
   </style>
 </head>
-
 <body>
 
   <nav class="navbar navbar-expand-lg px-4">
@@ -112,8 +59,7 @@
   </section>
 
   <div class="faq-search px-3">
-    <input id="searchFaq" type="text" class="form-control form-control-lg"
-      placeholder="Buscar preguntas (ej. matrícula, horarios, pagos)…">
+    <input id="searchFaq" type="text" class="form-control form-control-lg" placeholder="Buscar preguntas (ej. matrícula, horarios, pagos)…">
   </div>
 
   <div class="container">
@@ -153,8 +99,7 @@
         </h2>
         <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faqs">
           <div class="accordion-body">
-            Copia de cédula del encargado, certificado de nacimiento, carné de vacunas al día, certificado médico
-            reciente y formulario de inscripción completo.
+            Copia de cédula del encargado, certificado de nacimiento, carné de vacunas al día, certificado médico reciente y formulario de inscripción completo.
           </div>
         </div>
       </div>
@@ -167,8 +112,7 @@
         </h2>
         <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faqs">
           <div class="accordion-body">
-            Sí. Ofrecemos desayuno, merienda y almuerzo con menú balanceado. Si hay alergias, presentá certificado
-            médico y adaptamos la dieta.
+            Sí. Ofrecemos desayuno, merienda y almuerzo con menú balanceado. Si hay alergias, presentá certificado médico y adaptamos la dieta.
           </div>
         </div>
       </div>
@@ -194,8 +138,7 @@
         </h2>
         <div id="q6" class="accordion-collapse collapse" data-bs-parent="#faqs">
           <div class="accordion-body">
-            Transferencia, tarjeta y efectivo. La mensualidad se cancela en los primeros 5 días hábiles del mes.
-            Consultá por opciones de beca.
+            Transferencia, tarjeta y efectivo. La mensualidad se cancela en los primeros 5 días hábiles del mes. Consultá por opciones de beca.
           </div>
         </div>
       </div>
@@ -208,8 +151,7 @@
         </h2>
         <div id="q7" class="accordion-collapse collapse" data-bs-parent="#faqs">
           <div class="accordion-body">
-            Si hay fiebre o síntomas contagiosos, pedimos mantenerlo en casa. Para medicación en el centro requerimos
-            receta y autorización escrita.
+            Si hay fiebre o síntomas contagiosos, pedimos mantenerlo en casa. Para medicación en el centro requerimos receta y autorización escrita.
           </div>
         </div>
       </div>
@@ -261,8 +203,7 @@
         </h2>
         <div id="q11" class="accordion-collapse collapse" data-bs-parent="#faqs">
           <div class="accordion-body">
-            Mochila rotulada, muda de ropa, pañales (si usa), toallitas y botella de agua. El resto se informa por nivel
-            al inicio de periodo.
+            Mochila rotulada, muda de ropa, pañales (si usa), toallitas y botella de agua. El resto se informa por nivel al inicio de periodo.
           </div>
         </div>
       </div>
@@ -332,5 +273,4 @@
     });
   </script>
 </body>
-
 </html>

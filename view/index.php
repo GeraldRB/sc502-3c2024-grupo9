@@ -14,8 +14,7 @@
       box-sizing: border-box;
     }
 
-    html,
-    body {
+    html, body {
       height: 100dvh;
       font-family: 'Poppins', sans-serif;
       display: flex;
@@ -44,7 +43,7 @@
     main::before {
       content: "";
       position: absolute;
-      top: 0;
+      top: 0; 
       left: 0;
       width: 100%;
       height: 100%;
