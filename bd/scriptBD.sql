@@ -98,3 +98,16 @@ CREATE TABLE AUDITORIA (
     descripcion TEXT,
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario)
 );
+
+--Modificaciones para Padres
+ALTER TABLE NINOS
+  MODIFY id_usuario_padre INT NOT NULL;
+
+ALTER TABLE NINOS
+  ADD INDEX idx_ninos_padre (id_usuario_padre);
+
+INSERT INTO ROLES (nombre_rol)
+SELECT 'Padre'
+WHERE NOT EXISTS (SELECT 1 FROM ROLES WHERE nombre_rol = 'Padre');
+
+
