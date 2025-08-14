@@ -204,9 +204,9 @@ if ($rol == 1) {
 
     <?php if ($rol == 1): ?>
         <div class="tabla-mensajes">
-<h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
-  <i class="fas fa-envelope-open-text me-2"></i>Mensajes Recibidos
-</h3>
+            <h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
+                <i class="fas fa-envelope-open-text me-2"></i>Mensajes Recibidos
+            </h3>
             <?php if (empty($mensajes)): ?>
                 <p class="text-muted text-center">Aún no hay mensajes.</p>
             <?php else: ?>
