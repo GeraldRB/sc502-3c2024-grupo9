@@ -1,0 +1,3 @@
+[2025-08-14 11:56:03] [WARN] Fallo de autenticación: Usuario o clave inválidos | Pantalla: login.php | Usuario: Invitado
+[2025-08-14 11:58:03] [WARN] Fallo de autenticación: Usuario o clave inválidos | Pantalla: login.php | Usuario: Invitado
+[2025-08-14 11:58:17] [WARN] Fallo de autenticación: Usuario o clave inválidos | Pantalla: login.php | Usuario: Invitado

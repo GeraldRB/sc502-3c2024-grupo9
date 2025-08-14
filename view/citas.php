@@ -193,38 +193,44 @@ if ($rol == 1) {
 <?php endif; ?>
 
 <?php if ($rol == 1): ?>
-    <div class="container mt-5">
-<h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
-    <i class="fas fa-calendar-check me-2"></i>Todas las citas programadas
-</h3>
-        <?php if (empty($citas)): ?>
-            <p class="text-center text-muted">No hay citas registradas.</p>
-        <?php else: ?>
-            <div class="table-responsive">
-                <table class="table table-bordered mt-3">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Fecha y hora</th>
-                            <th>Motivo</th>
-                            <th>Estado</th>
+<div class="card mt-5 mb-5" style="max-width: 900px;">
+    <h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
+        <i class="fas fa-calendar-check me-2"></i>Todas las citas programadas
+    </h3>
+
+    <?php if (empty($citas)): ?>
+        <p class="text-center text-muted">No hay citas registradas.</p>
+    <?php else: ?>
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th scope="col"><i class="fas fa-user"></i> Nombre</th>
+                        <th scope="col"><i class="fas fa-calendar-day"></i> Fecha y hora</th>
+                        <th scope="col"><i class="fas fa-question-circle"></i> Motivo</th>
+                        <th scope="col"><i class="fas fa-info-circle"></i> Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($citas as $c): ?>
+                        <tr class="text-center">
+                            <td><?= htmlspecialchars($c["encargado"]) ?></td>
+                            <td><?= htmlspecialchars($c["fecha_cita"]) ?></td>
+                            <td><?= htmlspecialchars($c["motivo"]) ?></td>
+                            <td>
+                                <span class="badge bg-secondary px-3 py-2">
+                                    <?= htmlspecialchars($c["estado"]) ?>
+                                </span>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($citas as $c): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($c["encargado"]) ?></td>
-                                <td><?= htmlspecialchars($c["fecha_cita"]) ?></td>
-                                <td><?= htmlspecialchars($c["motivo"]) ?></td>
-                                <td><span class="badge bg-secondary"><?= $c["estado"] ?></span></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        <?php endif; ?>
-    </div>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
 <?php endif; ?>
+
 </main>
 
   <footer>

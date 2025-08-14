@@ -31,6 +31,7 @@ if ($rol == 1) {
     <title>Contacto | Guardería</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -203,7 +204,9 @@ if ($rol == 1) {
 
     <?php if ($rol == 1): ?>
         <div class="tabla-mensajes">
-            <h3>Mensajes Recibidos</h3>
+<h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
+  <i class="fas fa-envelope-open-text me-2"></i>Mensajes Recibidos
+</h3>
             <?php if (empty($mensajes)): ?>
                 <p class="text-muted text-center">Aún no hay mensajes.</p>
             <?php else: ?>
