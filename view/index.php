@@ -17,6 +17,7 @@ $rol = $_SESSION['id_rol'];
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -152,6 +153,10 @@ $rol = $_SESSION['id_rol'];
       <?php endif; ?>
 
     </ul>
+    <a href="../logout.php" class="btn btn-outline-danger btn-sm">
+  <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+</a>
+
   </div>
 </nav>
 
