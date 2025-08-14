@@ -117,8 +117,6 @@ if (isset($_SESSION["usuarioID"]) && isset($_SESSION["id_rol"])) {
 
       <button type="submit" class="btn btn-login w-100">Ingresar</button>
     </form>
-
-    <p class="small-text">¿No tienes cuenta? <a href="registro.php">Regístrate aquí</a></p>
   </div>
 
 </body>
