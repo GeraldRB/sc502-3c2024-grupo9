@@ -6,7 +6,7 @@ if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
     exit;
 }
 
-$rol = $_SESSION['id_rol']; // 1 = admin, 2 = encargado
+$rol = $_SESSION['id_rol']; 
 $usuarioID = $_SESSION['usuarioID'];
 
 $errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
@@ -117,7 +117,7 @@ $ok = isset($_GET['success']);
   </button>
   <div id="nav" class="collapse navbar-collapse justify-content-end">
     <ul class="navbar-nav">
-      <?php if ($rol == 1): // ADMIN ?>
+      <?php if ($rol == 1):?>
         <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
         <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
@@ -126,14 +126,14 @@ $ok = isset($_GET['success']);
         <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
         <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
 
-      <?php elseif ($rol == 2): // ENCARGADO ?>
+      <?php elseif ($rol == 2):?>
         <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
         <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
         <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
 
-      <?php elseif ($rol == 3): // OTRO ROL ?>
+      <?php elseif ($rol == 3):?>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
       <?php endif; ?>
@@ -150,7 +150,6 @@ $ok = isset($_GET['success']);
     <div class="container">
       <div class="accordion" id="accordionRecomendaciones">
 
-        <!-- Ítem 1 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec0">
@@ -167,7 +166,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 2 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec1">
@@ -183,7 +181,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 3 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec2">
@@ -199,7 +196,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 4 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec3">
@@ -215,7 +211,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 5 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec4">
@@ -231,7 +226,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 6 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec5">
@@ -248,7 +242,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 7 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec6">
@@ -265,7 +258,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 8 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec7">
@@ -281,7 +273,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 9 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec8">
@@ -298,7 +289,6 @@ $ok = isset($_GET['success']);
           </div>
         </div>
 
-        <!-- Ítem 10 -->
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec9">

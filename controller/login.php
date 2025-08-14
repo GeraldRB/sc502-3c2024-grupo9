@@ -21,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($usuario["estado"] == 1) {
                     $_SESSION["nombreUsuario"] = $usuario["nombre"];
                     $_SESSION["idUsuario"] = $usuario["id_usuario"];
-                    header("Location: ../view/index.php"); // Redirección final
+                    header("Location: ../view/index.php"); 
                     exit();
                 } else {
-                    header("Location: ../view/login.php?error=2"); // Usuario inactivo
+                    header("Location: ../view/login.php?error=2"); 
                     exit();
                 }
             }

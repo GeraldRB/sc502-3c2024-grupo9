@@ -37,7 +37,6 @@ $ok = isset($_GET['success']);
 </head>
 <body class="bg-light">
 
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="index.php">
       <img src="../public/logo.jpg" alt="Logo Guardería">
@@ -62,7 +61,6 @@ $ok = isset($_GET['success']);
     </div>
   </nav>
 
-  <!-- CONTENIDO -->
   <div class="container py-5">
     <div class="text-center mb-4">
       <h1 class="fw-bold">Contacto</h1>

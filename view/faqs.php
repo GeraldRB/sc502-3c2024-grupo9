@@ -137,7 +137,6 @@
 
   <div class="container">
     <div class="accordion" id="faqs">
-      <!-- El contenido de preguntas irá generado por JS -->
     </div>
   </div>
 

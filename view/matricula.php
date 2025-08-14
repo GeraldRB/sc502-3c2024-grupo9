@@ -18,7 +18,6 @@ error_reporting(E_ALL);
 
 require_once("../accesoDatos/conexion.php");
 
-//Guardar la lista de programas de programas_educativos
 $listaProgramas = [];
 
 try {
@@ -35,7 +34,6 @@ try {
   $conexionBD->close();
 
 } catch (Exception $e) {
-  //echo "Error:" .$e;
 }
 ?>
 <!DOCTYPE html>

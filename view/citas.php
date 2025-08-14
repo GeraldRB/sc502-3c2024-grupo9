@@ -40,7 +40,6 @@ $ok = isset($_GET['success']);
 </head>
 <body class="bg-light">
 
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="index.php">
       <img src="../public/logo.jpg" alt="REDCUDI Logo">
@@ -65,10 +64,8 @@ $ok = isset($_GET['success']);
     </div>
   </nav>
 
-  <!-- CONTENIDO -->
   <div class="container py-5">
     <div class="row justify-content-center">
-      <!-- Formulario -->
       <div class="col-md-6">
         <div class="card p-4 shadow-sm">
           <h3 class="mb-3 text-center">Agendar Cita</h3>
@@ -123,7 +120,6 @@ $ok = isset($_GET['success']);
         </div>
       </div>
 
-      <!-- Lista de próximas citas -->
       <div class="col-md-6 mt-4 mt-md-0">
         <div class="card p-4 shadow-sm">
           <h4 class="mb-3">Mis próximas citas</h4>
