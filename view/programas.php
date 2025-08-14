@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
+    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+    exit;
+}
+
+$rol = $_SESSION['id_rol'];
+
+$errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
+$ok = isset($_GET['success']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -106,13 +119,18 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+        <?php if ($rol == 1 || $rol == 2): ?>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link active" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 1): ?>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+        <?php endif; ?>
       </ul>
     </div>
   </nav>

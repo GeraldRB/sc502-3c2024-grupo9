@@ -1,4 +1,17 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
+    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+    exit;
+}
+
+$rol = $_SESSION['id_rol'];
+
+$errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
+$ok = isset($_GET['success']);
+?>
+<?php
 ini_set("display_errors", 1);
 ini_set("display_startup_errors", 1);
 error_reporting(E_ALL);
@@ -22,51 +35,11 @@ try {
   $conexionBD->close();
 
 } catch (Exception $e) {
-
   //echo "Error:" .$e;
 }
-
-
-//Esto no funcionara Se tendra que esperar a que ninos este listo
-
-
-// if($_SERVER["REQUEST_METHOD"] === "POST"){
-
-//   $cedulaa = $_POST["cedula"] ?? 0;
-//   $programaa= $_POST["programa"]?? 0;
-//   $fechaMatricula = $_POST["fecha"]?? '';
-
-//   if(!$cedulaa || !$programaa || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fechaMatricula)){
-//     exit("Datos invalidos");
-//   }
-
-//   try{
-//       $conexion = abrirConexion();
-
-//       $sql = "INSERT INTO matricula (id_nino, id_programa, fecha_matricula) VALUES (?,?,?)";
-//       $stmt = $conexion->prepare($sql);
-//       if(!$stmt){ exit("Error: " .$conexion->error); }
-//       $stmt->bind_param("iis", $cedulaa, $programaa, $fechaMatricula);
-
-//       if($stmt->execute()){
-//         echo "Realizado con exito";
-//       }else{
-//         echo "error al insertar datos";
-//       }
-
-//       $stmt->close();
-//       $conexion->close();
-
-//     }catch(Exception $e){
-//       echo "Error:" . $e->getMessage();
-//   }
-//}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Formulario de Matrícula</title>
@@ -78,10 +51,7 @@ try {
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
-    .navbar-brand img {
-      height: 50px;
-    }
-
+    .navbar-brand img { height: 50px; }
 
     main {
       flex: 1;
@@ -92,10 +62,7 @@ try {
       display: flex;
       align-items: center;
       justify-content: center;
-
-
     }
-
 
     main::before {
       content: "";
@@ -105,25 +72,18 @@ try {
       width: 100%;
       height: 100%;
       background-color: rgba(255, 255, 255, 0.8);
-      /* Opacidad */
       z-index: 1;
     }
 
-    main>* {
+    main > * {
       position: relative;
       z-index: 2;
     }
-
 
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #f0f9ff;
       height: 100vh;
-      /* display: flex;
-      justify-content: center;
-      align-items: center; */
-
-
     }
 
     .card {
@@ -151,7 +111,6 @@ try {
       border-color: #198c85;
     }
 
-
     footer {
       background-color: #20b2aa;
       color: white;
@@ -160,14 +119,10 @@ try {
       font-size: 0.9rem;
     }
 
-    footer p {
-      margin: 3px 0;
-    }
+    footer p { margin: 3px 0; }
 
     @media (max-width: 768px) {
-      .hero-content h1 {
-        font-size: 1.8rem;
-      }
+      .hero-content h1 { font-size: 1.8rem; }
     }
   </style>
 </head>
@@ -183,13 +138,18 @@ try {
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+        <?php if ($rol == 1 || $rol == 2): ?>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link active" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 1): ?>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+        <?php endif; ?>
       </ul>
     </div>
   </nav>
@@ -197,15 +157,11 @@ try {
   <main class="shadow">
     <div class="card shadow">
       <img src="../public/logo.jpg" alt="REDCUDI Logo" class="logo">
-
       <div class="form-matricula">
         <h3 class="mb-4 text-center">Formulario de Matrícula</h3>
-
         <form method="POST">
-          <!-- action="../controller/matricula.php" -->
-
           <div class="mb-3">
-            <label for="id_niño" class="form-label">Cedula del Niño</label>
+            <label for="id_niño" class="form-label">Cédula del Niño</label>
             <input type="number" class="form-control" id="id_nino" name="cedula" required>
           </div>
 
@@ -232,7 +188,6 @@ try {
       </div>
   </main>
 
-
   <footer>
     <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
     <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
@@ -241,8 +196,8 @@ try {
     <p><strong>Teléfono:</strong> 2221-7722</p>
     <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
   </footer>
+
   <script src="programa.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

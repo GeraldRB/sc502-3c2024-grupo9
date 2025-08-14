@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
+    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+    exit;
+}
+
+$rol = $_SESSION['id_rol']; // 1 = admin, 2 = encargado
+$usuarioID = $_SESSION['usuarioID'];
+
+$errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
+$ok = isset($_GET['success']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,11 +19,56 @@
   <title>Agendar Cita</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
+    }
+
+    .navbar-brand img {
+      height: 50px;
+    }
+
+    .card h3, .card h4 {
+      color: #20b2aa;
+    }
+  </style>
 </head>
 <body class="bg-light">
 
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg px-4">
+    <a class="navbar-brand" href="index.php">
+      <img src="../public/logo.jpg" alt="REDCUDI Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="nav" class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <?php if ($rol == 1 || $rol == 2): ?>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link active" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+        <?php if ($rol == 1): ?>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+        <?php endif; ?>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
   <div class="container py-5">
     <div class="row justify-content-center">
+      <!-- Formulario -->
       <div class="col-md-6">
         <div class="card p-4 shadow-sm">
           <h3 class="mb-3 text-center">Agendar Cita</h3>
@@ -64,6 +123,7 @@
         </div>
       </div>
 
+      <!-- Lista de próximas citas -->
       <div class="col-md-6 mt-4 mt-md-0">
         <div class="card p-4 shadow-sm">
           <h4 class="mb-3">Mis próximas citas</h4>
@@ -72,9 +132,8 @@
             require_once("../accesoDatos/conexion.php");
             try {
               $cn = abrirConexion();
-              $idUsuario = 1; // reemplazar por $_SESSION['id_usuario'] cuando usen login
               $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
-              $q->bind_param("i", $idUsuario);
+              $q->bind_param("i", $usuarioID);
               $q->execute();
               $res = $q->get_result();
               if ($res->num_rows === 0){
@@ -99,6 +158,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     flatpickr("#fecha_cita", {
