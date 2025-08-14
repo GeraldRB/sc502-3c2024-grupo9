@@ -2,16 +2,17 @@
 session_start();
 
 if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
-    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
-    exit;
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
 }
 
-$rol = $_SESSION['id_rol']; 
+$rol = $_SESSION['id_rol'];
 $usuarioID = $_SESSION['usuarioID'];
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Agendar Cita</title>
@@ -33,7 +34,8 @@ $usuarioID = $_SESSION['usuarioID'];
       height: 50px;
     }
 
-    h3, h4 {
+    h3,
+    h4 {
       color: #20b2aa;
       font-weight: 600;
     }
@@ -58,51 +60,61 @@ $usuarioID = $_SESSION['usuarioID'];
     }
   </style>
 </head>
+
 <body>
 
-  <nav class="navbar navbar-expand-lg px-4">
+  <nav class="navbar navbar-expand-lg navbar-light px-4">
     <a class="navbar-brand" href="index.php">
       <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="nav" class="collapse navbar-collapse justify-content-end">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+
         <?php if ($rol == 1 || $rol == 2): ?>
           <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
           <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
           <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link active" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
           <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
         <?php endif; ?>
+
         <?php if ($rol == 1): ?>
           <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
           <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
         <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
       </ul>
     </div>
   </nav>
 
+
   <div class="container py-5">
     <div class="row justify-content-center">
-      <!-- Formulario -->
       <div class="col-md-6 mb-4 mb-md-0">
         <div class="card p-4">
           <h3 class="text-center mb-4">Agendar Cita</h3>
 
           <?php if (isset($_GET["ok"])): ?>
             <div class="alert alert-success">Cita creada correctamente.</div>
-          <?php elseif (isset($_GET["err"])): 
-              $map = [
-                "campos"=>"Completá todos los campos.",
-                "pasado"=>"La fecha/hora debe ser futura.",
-                "choque"=>"Ya tenés una cita en esa fecha/hora.",
-                "ins"=>"No se pudo guardar la cita.",
-                "ex"=>"Error inesperado. Intenta de nuevo."
-              ];
-              $msg = $map[$_GET["err"]] ?? "Error.";
-          ?>
+          <?php elseif (isset($_GET["err"])):
+            $map = [
+              "campos" => "Completá todos los campos.",
+              "pasado" => "La fecha/hora debe ser futura.",
+              "choque" => "Ya tenés una cita en esa fecha/hora.",
+              "ins" => "No se pudo guardar la cita.",
+              "ex" => "Error inesperado. Intenta de nuevo."
+            ];
+            $msg = $map[$_GET["err"]] ?? "Error.";
+            ?>
             <div class="alert alert-danger"><?php echo $msg; ?></div>
           <?php endif; ?>
 
@@ -119,7 +131,8 @@ $usuarioID = $_SESSION['usuarioID'];
 
             <div class="mb-3">
               <label for="fecha_cita" class="form-label">Fecha y hora</label>
-              <input type="text" class="form-control" id="fecha_cita" name="fecha_cita" placeholder="Seleccioná fecha y hora" required>
+              <input type="text" class="form-control" id="fecha_cita" name="fecha_cita"
+                placeholder="Seleccioná fecha y hora" required>
             </div>
 
             <div class="mb-3">
@@ -147,28 +160,29 @@ $usuarioID = $_SESSION['usuarioID'];
           <h4 class="mb-3">Mis próximas citas</h4>
           <ul class="list-group">
             <?php
-              require_once("../accesoDatos/conexion.php");
-              try {
-                $cn = abrirConexion();
-                $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
-                $q->bind_param("i", $usuarioID);
-                $q->execute();
-                $res = $q->get_result();
-                if ($res->num_rows === 0){
-                  echo '<li class="list-group-item">No tenés citas próximas.</li>';
-                } else {
-                  while($row = $res->fetch_assoc()){
-                    echo '<li class="list-group-item d-flex justify-content-between align-items-center">';
-                    echo '<div><strong>'.htmlspecialchars($row["motivo"]).'</strong><br><small>'.$row["fecha_cita"].'</small></div>';
-                    echo '<span class="badge bg-secondary">'.$row["estado"].'</span>';
-                    echo '</li>';
-                  }
+            require_once("../accesoDatos/conexion.php");
+            try {
+              $cn = abrirConexion();
+              $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
+              $q->bind_param("i", $usuarioID);
+              $q->execute();
+              $res = $q->get_result();
+              if ($res->num_rows === 0) {
+                echo '<li class="list-group-item">No tenés citas próximas.</li>';
+              } else {
+                while ($row = $res->fetch_assoc()) {
+                  echo '<li class="list-group-item d-flex justify-content-between align-items-center">';
+                  echo '<div><strong>' . htmlspecialchars($row["motivo"]) . '</strong><br><small>' . $row["fecha_cita"] . '</small></div>';
+                  echo '<span class="badge bg-secondary">' . $row["estado"] . '</span>';
+                  echo '</li>';
                 }
-              } catch (Exception $e) {
-                echo '<li class="list-group-item text-danger">No se pudieron cargar las citas.</li>';
-              } finally {
-                if (isset($cn)) cerrarConexion($cn);
               }
+            } catch (Exception $e) {
+              echo '<li class="list-group-item text-danger">No se pudieron cargar las citas.</li>';
+            } finally {
+              if (isset($cn))
+                cerrarConexion($cn);
+            }
             ?>
           </ul>
         </div>
@@ -187,4 +201,5 @@ $usuarioID = $_SESSION['usuarioID'];
     });
   </script>
 </body>
+
 </html>

@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
-    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
-    exit;
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
 }
 
 $rol = $_SESSION['id_rol'];
@@ -12,6 +12,7 @@ $usuarioID = $_SESSION['usuarioID'];
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +34,8 @@ $usuarioID = $_SESSION['usuarioID'];
       height: 50px;
     }
 
-    h1, h2 {
+    h1,
+    h2 {
       color: #20b2aa;
       font-weight: 600;
     }
@@ -56,7 +58,7 @@ $usuarioID = $_SESSION['usuarioID'];
     .list-group-item {
       border-radius: 0.5rem;
       margin-bottom: 10px;
-      box-shadow: 0 1px 5px rgba(0,0,0,.05);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, .05);
     }
 
     .text-muted {
@@ -64,34 +66,43 @@ $usuarioID = $_SESSION['usuarioID'];
     }
   </style>
 </head>
+
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg px-4">
+  <nav class="navbar navbar-expand-lg navbar-light px-4">
     <a class="navbar-brand" href="index.php">
-      <img src="../public/logo.jpg" alt="Logo Guardería">
+      <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="nav" class="collapse navbar-collapse justify-content-end">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+
         <?php if ($rol == 1 || $rol == 2): ?>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'recomendaciones.php' ? ' active' : '' ?>" href="recomendaciones.php">Recomendaciones</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'matricula.php' ? ' active' : '' ?>" href="matricula.php">Matrícula</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'faqs.php' ? ' active' : '' ?>" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'citas.php' ? ' active' : '' ?>" href="citas.php">Citas</a></li>
-          <li class="nav-item"><a class="nav-link active" href="contacto.php">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
         <?php endif; ?>
+
         <?php if ($rol == 1): ?>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'programas.php' ? ' active' : '' ?>" href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'listaProgramas.php' ? ' active' : '' ?>" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
         <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
       </ul>
     </div>
   </nav>
 
-  <!-- CONTENIDO -->
+
   <div class="container py-5">
     <div class="text-center mb-4">
       <h1>Contacto</h1>
@@ -104,7 +115,6 @@ $usuarioID = $_SESSION['usuarioID'];
       <div class="alert alert-danger text-center">No se pudo enviar. Intenta de nuevo.</div>
     <?php endif; ?>
 
-    <!-- FORMULARIO -->
     <div class="card p-4 mb-5">
       <form method="POST" action="../controller/contacto.php">
         <div class="mb-3">
@@ -123,30 +133,30 @@ $usuarioID = $_SESSION['usuarioID'];
       </form>
     </div>
 
-    <!-- MENSAJES RECIBIDOS -->
     <div class="mt-5">
       <h2 class="text-center mb-4">Mensajes Recibidos</h2>
       <ul class="list-group">
         <?php
-          require_once("../accesoDatos/conexion.php");
-          try {
-            $cn = abrirConexion();
-            $rs = $cn->query("SELECT nombre, correo, mensaje, fecha_envio FROM CONTACTO ORDER BY id_contacto DESC LIMIT 20");
-            while ($row = $rs->fetch_assoc()):
-        ?>
-        <li class="list-group-item">
-          <strong><?= htmlspecialchars($row["nombre"]) ?></strong>
-          <span class="badge bg-light text-dark ms-2"><?= htmlspecialchars($row["correo"]) ?></span>
-          <p class="mb-1 mt-2"><?= nl2br(htmlspecialchars($row["mensaje"])) ?></p>
-          <div class="text-muted">Enviado: <?= $row["fecha_envio"] ?></div>
-        </li>
-        <?php
-            endwhile;
-          } catch (Exception $e) {
-            echo '<li class="list-group-item text-danger">No se pudieron cargar los mensajes.</li>';
-          } finally {
-            if (isset($cn)) cerrarConexion($cn);
-          }
+        require_once("../accesoDatos/conexion.php");
+        try {
+          $cn = abrirConexion();
+          $rs = $cn->query("SELECT nombre, correo, mensaje, fecha_envio FROM CONTACTO ORDER BY id_contacto DESC LIMIT 20");
+          while ($row = $rs->fetch_assoc()):
+            ?>
+            <li class="list-group-item">
+              <strong><?= htmlspecialchars($row["nombre"]) ?></strong>
+              <span class="badge bg-light text-dark ms-2"><?= htmlspecialchars($row["correo"]) ?></span>
+              <p class="mb-1 mt-2"><?= nl2br(htmlspecialchars($row["mensaje"])) ?></p>
+              <div class="text-muted">Enviado: <?= $row["fecha_envio"] ?></div>
+            </li>
+            <?php
+          endwhile;
+        } catch (Exception $e) {
+          echo '<li class="list-group-item text-danger">No se pudieron cargar los mensajes.</li>';
+        } finally {
+          if (isset($cn))
+            cerrarConexion($cn);
+        }
         ?>
       </ul>
     </div>
@@ -154,4 +164,5 @@ $usuarioID = $_SESSION['usuarioID'];
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

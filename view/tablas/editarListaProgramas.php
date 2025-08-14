@@ -3,12 +3,20 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+session_start();
+if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
+    header("Location: ../login.php");
+    exit();
+}
+
+$rol = $_SESSION['id_rol'];
+
 require_once("../../accesoDatos/conexion.php");
 $conexion = abrirConexion();
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id <= 0)
-    exit("ID invalido");
+    exit("ID inválido");
 
 $errorr = "";
 
@@ -54,16 +62,16 @@ $programa = $res->fetch_assoc();
 if (!$programa)
     exit("Programa no encontrado.");
 
+cerrarConexion($conexion);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Programa Educativo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Bootstrap & estilos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
@@ -97,13 +105,15 @@ if (!$programa)
         main::before {
             content: "";
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(255, 255, 255, 0.8);
             z-index: 1;
         }
 
-        main > * {
+        main>* {
             position: relative;
             z-index: 2;
         }
@@ -134,106 +144,113 @@ if (!$programa)
         footer p {
             margin: 3px 0;
         }
-
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 1.8rem;
-            }
-        }
     </style>
 </head>
+
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light px-4">
-        <a class="navbar-brand" href="#">
-            <img src="../../public/logo.jpg" alt="REDCUDI Logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
+<nav class="navbar navbar-expand-lg navbar-light px-4">
+    <a class="navbar-brand" href="../index.php">
+        <img src="../../public/logo.jpg" alt="REDCUDI Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+            <?php if ($rol == 1 || $rol == 2): ?>
                 <li class="nav-item"><a class="nav-link" href="../recomendaciones.php">Recomendaciones</a></li>
                 <li class="nav-item"><a class="nav-link" href="../matricula.php">Matrícula</a></li>
                 <li class="nav-item"><a class="nav-link" href="../faqs.php">FAQs</a></li>
                 <li class="nav-item"><a class="nav-link" href="../citas.php">Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="../programas.php">Programas Educativos</a></li>
                 <li class="nav-item"><a class="nav-link" href="../contacto.php">Contacto</a></li>
-            </ul>
+            <?php endif; ?>
+            <?php if ($rol == 1): ?>
+                <li class="nav-item"><a class="nav-link" href="../programas.php">Programas Educativos</a></li>
+                <li class="nav-item"><a class="nav-link" href="listaProgramas.php">Lista de Programas</a></li>
+                <li class="nav-item"><a class="nav-link" href="../usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
+            <?php endif; ?>
+            <?php if ($rol == 3): ?>
+                <li class="nav-item"><a class="nav-link" href="../faqs.php">FAQs</a></li>
+                <li class="nav-item"><a class="nav-link" href="../contacto.php">Contacto</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <div class="card">
+        <div class="container mt-3">
+            <h2 class="text-center mb-4">Editar Programa Educativo</h2>
+
+            <?php if (!empty($errorr)): ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($errorr) ?></div>
+            <?php endif; ?>
+
+            <form method="POST">
+                <input type="hidden" name="id_programa" value="<?= (int) $programa['id_programa'] ?>">
+
+                <div class="mb-3">
+                    <label class="form-label">Título</label>
+                    <input type="text" name="titulo" class="form-control"
+                        value="<?= htmlspecialchars($programa['titulo']) ?>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea name="descripcion" class="form-control" rows="4"
+                        required><?= htmlspecialchars($programa['descripcion']) ?></textarea>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Nivel</label>
+                        <select name="nivel" class="form-select" required>
+                            <option value="">Seleccione nivel</option>
+                            <option value="Preescolar" <?= $programa['nivel'] == 'Preescolar' ? 'selected' : '' ?>>Preescolar</option>
+                            <option value="Primaria" <?= $programa['nivel'] == 'Primaria' ? 'selected' : '' ?>>Primaria</option>
+                            <option value="Secundaria" <?= $programa['nivel'] == 'Secundaria' ? 'selected' : '' ?>>Secundaria</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha Inicio</label>
+                        <input type="date" name="fecha_inicio" class="form-control"
+                            value="<?= htmlspecialchars($programa['fecha_inicio']) ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha Fin</label>
+                        <input type="date" name="fecha_fin" class="form-control"
+                            value="<?= htmlspecialchars($programa['fecha_fin']) ?>">
+                    </div>
+                </div>
+
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="estado" name="estado" <?= $programa['estado'] ? 'checked' : '' ?>>
+                    <label class="form-check-label" for="estado">Activo</label>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button class="btn btn-success" type="submit">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Guardar
+                    </button>
+                    <a class="btn btn-secondary" href="listaProgramas.php">
+                        <i class="fa-solid fa-ban me-1"></i> Cancelar
+                    </a>
+                </div>
+            </form>
         </div>
-    </nav>
+    </div>
+</main>
 
-    <main>
-        <div class="card">
-            <div class="container mt-3">
-                <h2 class="text-center mb-4">Editar Programa Educativo</h2>
+<footer>
+    <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
+    <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
+    <p><strong>Distrito:</strong> Hospital</p>
+    <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
+    <p><strong>Teléfono:</strong> 2221-7722</p>
+    <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
+</footer>
 
-                <?php if (!empty($errorr)): ?>
-                    <div class="alert alert-danger"><?= htmlspecialchars($errorr) ?></div>
-                <?php endif; ?>
-
-                <form method="POST">
-                    <input type="hidden" name="id_programa" value="<?= (int) $programa['id_programa'] ?>">
-
-                    <div class="mb-3">
-                        <label class="form-label">Título</label>
-                        <input type="text" name="titulo" class="form-control" value="<?= htmlspecialchars($programa['titulo']) ?>" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Descripción</label>
-                        <textarea name="descripcion" class="form-control" rows="4" required><?= htmlspecialchars($programa['descripcion']) ?></textarea>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Nivel</label>
-                            <select name="nivel" class="form-select" required>
-                                <option value="">Seleccione nivel</option>
-                                <option value="Preescolar" <?= $programa['nivel'] == 'Preescolar' ? 'selected' : '' ?>>Preescolar</option>
-                                <option value="Primaria" <?= $programa['nivel'] == 'Primaria' ? 'selected' : '' ?>>Primaria</option>
-                                <option value="Secundaria" <?= $programa['nivel'] == 'Secundaria' ? 'selected' : '' ?>>Secundaria</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Fecha Inicio</label>
-                            <input type="date" name="fecha_inicio" class="form-control" value="<?= htmlspecialchars($programa['fecha_inicio']) ?>">
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Fecha Fin</label>
-                            <input type="date" name="fecha_fin" class="form-control" value="<?= htmlspecialchars($programa['fecha_fin']) ?>">
-                        </div>
-                    </div>
-
-                    <div class="form-check form-switch mt-3">
-                        <input class="form-check-input" type="checkbox" id="estado" name="estado" <?= $programa['estado'] ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="estado">Activo</label>
-                    </div>
-
-                    <div class="mt-4 d-flex gap-2">
-                        <button class="btn btn-success" type="submit">
-                            <i class="fa-solid fa-floppy-disk me-1"></i> Guardar
-                        </button>
-                        <a class="btn btn-secondary" href="listaProgramas.php">
-                            <i class="fa-solid fa-ban me-1"></i> Cancelar
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
-        <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
-        <p><strong>Distrito:</strong> Hospital</p>
-        <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
-        <p><strong>Teléfono:</strong> 2221-7722</p>
-        <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

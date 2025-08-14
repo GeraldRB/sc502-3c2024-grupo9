@@ -9,6 +9,8 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
     exit();
 }
 
+$rol = $_SESSION['id_rol']; // Se asigna el rol para usar en el navbar
+
 require_once("../../accesoDatos/conexion.php");
 $conexion = abrirConexion();
 
@@ -23,12 +25,11 @@ cerrarConexion($conexion);
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Lista de Usuarios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -69,7 +70,7 @@ cerrarConexion($conexion);
             z-index: 1;
         }
 
-        main>* {
+        main > * {
             position: relative;
             z-index: 2;
         }
@@ -109,108 +110,114 @@ cerrarConexion($conexion);
     </style>
 </head>
 
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-light px-4">
-        <a class="navbar-brand" href="../index.php">
-            <img src="../../public/logo.jpg" alt="REDCUDI Logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
+<nav class="navbar navbar-expand-lg navbar-light px-4">
+    <a class="navbar-brand" href="../index.php">
+        <img src="../../public/logo.jpg" alt="REDCUDI Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+
+            <?php if ($rol == 1 || $rol == 2): ?>
                 <li class="nav-item"><a class="nav-link" href="../recomendaciones.php">Recomendaciones</a></li>
                 <li class="nav-item"><a class="nav-link" href="../matricula.php">Matrícula</a></li>
                 <li class="nav-item"><a class="nav-link" href="../faqs.php">FAQs</a></li>
                 <li class="nav-item"><a class="nav-link" href="../citas.php">Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="../programas.php">Programas Educativos</a></li>
                 <li class="nav-item"><a class="nav-link" href="../contacto.php">Contacto</a></li>
+            <?php endif; ?>
+
+            <?php if ($rol == 1): ?>
+                <li class="nav-item"><a class="nav-link" href="../programas.php">Programas Educativos</a></li>
+                <li class="nav-item"><a class="nav-link" href="../tablas/listaProgramas.php">Lista de Programas</a></li>
                 <li class="nav-item"><a class="nav-link active" href="listaUsuarios.php">Lista de Usuarios</a></li>
-            </ul>
+            <?php endif; ?>
+
+            <?php if ($rol == 3): ?>
+                <li class="nav-item"><a class="nav-link" href="../faqs.php">FAQs</a></li>
+                <li class="nav-item"><a class="nav-link" href="../contacto.php">Contacto</a></li>
+            <?php endif; ?>
+
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <div class="card p-4 shadow-lg mb-5">
+        <img src="../../public/logo.jpg" alt="REDCUDI Logo" class="logo">
+        <h2 class="fw-bold text-center mb-3">Lista de Usuarios</h2>
+
+        <div class="mb-3 text-end">
+            <a href="crearUsuario.php" class="btn btn-success">+ Agregar Usuario</a>
         </div>
-    </nav>
 
-
-    <main>
-        <div class="card p-4 shadow-lg mb-5">
-            <img src="../../public/logo.jpg" alt="REDCUDI Logo" class="logo">
-            <h2 class="fw-bold text-center mb-3">Lista de Usuarios</h2>
-
-            <div class="mb-3 text-end">
-                <a href="crearUsuario.php" class="btn btn-success">+ Agregar Usuario</a>
-            </div>
-
-            <div class="table-responsive">
-                <table id="tablaUsuarios" class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Correo</th>
-                            <th>Rol</th>
-                            <th>Estado</th>
-                            <th>Fecha Registro</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($resultado && $resultado->num_rows): ?>
-                            <?php while ($u = $resultado->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($u["nombre"]) ?></td>
-                                    <td><?= htmlspecialchars($u["correo"]) ?></td>
-                                    <td><?= htmlspecialchars($u["nombre_rol"]) ?></td>
-                                    <td><?= $u["estado"] ? 'Activo' : 'Inactivo' ?></td>
-                                    <td><?= date("d/m/Y", strtotime($u["fecha_registro"])) ?></td>
-                                    <td>
-                                        <div class="d-flex gap-2 justify-content-center">
-                                            <a href="editarUsuario.php?id=<?= $u['id_usuario'] ?>"
-                                                class="btn btn-primary btn-sm">Editar</a>
-                                            <a href="eliminarUsuario.php?id=<?= $u['id_usuario'] ?>"
-                                                class="btn btn-danger btn-sm"
-                                                onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">Eliminar</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
+        <div class="table-responsive">
+            <table id="tablaUsuarios" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($resultado && $resultado->num_rows): ?>
+                        <?php while ($u = $resultado->fetch_assoc()): ?>
                             <tr>
-                                <td colspan="6" class="text-center">No hay usuarios registrados</td>
+                                <td><?= htmlspecialchars($u["nombre"]) ?></td>
+                                <td><?= htmlspecialchars($u["correo"]) ?></td>
+                                <td><?= htmlspecialchars($u["nombre_rol"]) ?></td>
+                                <td><?= $u["estado"] ? 'Activo' : 'Inactivo' ?></td>
+                                <td><?= date("d/m/Y", strtotime($u["fecha_registro"])) ?></td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a href="editarUsuario.php?id=<?= $u['id_usuario'] ?>" class="btn btn-primary btn-sm">Editar</a>
+                                        <a href="eliminarUsuario.php?id=<?= $u['id_usuario'] ?>" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('¿Seguro que deseas eliminar este usuario?')">Eliminar</a>
+                                    </div>
+                                </td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr><td colspan="6" class="text-center">No hay usuarios registrados</td></tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
-    </main>
+    </div>
+</main>
 
-    <footer style="background-color: #20b2aa; color: white; padding: 20px 0; text-align: center; font-size: 0.9rem;">
-        <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
-        <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
-        <p><strong>Distrito:</strong> Hospital</p>
-        <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
-        <p><strong>Teléfono:</strong> 2221-7722</p>
-        <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
-    </footer>
+<footer style="background-color: #20b2aa; color: white; padding: 20px 0; text-align: center; font-size: 0.9rem;">
+    <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
+    <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
+    <p><strong>Distrito:</strong> Hospital</p>
+    <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
+    <p><strong>Teléfono:</strong> 2221-7722</p>
+    <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
+</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#tablaUsuarios').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-                },
-                responsive: true,
-                pageLength: 5
-            });
+<script>
+    $(document).ready(function () {
+        $('#tablaUsuarios').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+            },
+            responsive: true,
+            pageLength: 5
         });
-    </script>
-</body>
+    });
+</script>
 
+</body>
 </html>

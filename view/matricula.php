@@ -134,39 +134,39 @@ try {
 
 <body>
 
-  <nav class="navbar navbar-expand-lg px-4">
+  <nav class="navbar navbar-expand-lg navbar-light px-4">
     <a class="navbar-brand" href="index.php">
-      <img src="../public/logo.jpg" alt="Logo Guardería">
+      <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="nav" class="collapse navbar-collapse justify-content-end">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+
         <?php if ($rol == 1 || $rol == 2): ?>
-          <li class="nav-item"><a
-              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'recomendaciones.php' ? ' active' : '' ?>"
-              href="recomendaciones.php">Recomendaciones</a></li>
-          <li class="nav-item"><a
-              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'matricula.php' ? ' active' : '' ?>"
-              href="matricula.php">Matrícula</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'faqs.php' ? ' active' : '' ?>"
-              href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'citas.php' ? ' active' : '' ?>"
-              href="citas.php">Citas</a></li>
-          <li class="nav-item"><a class="nav-link active" href="contacto.php">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
         <?php endif; ?>
+
         <?php if ($rol == 1): ?>
-          <li class="nav-item"><a
-              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'programas.php' ? ' active' : '' ?>"
-              href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a
-              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'listaProgramas.php' ? ' active' : '' ?>"
-              href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
         <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
       </ul>
     </div>
   </nav>
+
 
   <main class="shadow">
     <div class="card shadow">

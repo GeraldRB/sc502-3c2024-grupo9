@@ -123,7 +123,7 @@ $rol = $_SESSION['id_rol'];
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light px-4">
-  <a class="navbar-brand" href="#">
+  <a class="navbar-brand" href="index.php">
     <img src="../public/logo.jpg" alt="REDCUDI Logo">
   </a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -132,23 +132,21 @@ $rol = $_SESSION['id_rol'];
   <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
     <ul class="navbar-nav">
 
-      <?php if ($rol == 1):?>
+      <?php if ($rol == 1 || $rol == 2): ?>
         <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
         <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
         <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+      <?php endif; ?>
+
+      <?php if ($rol == 1): ?>
         <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
         <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+        <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
+      <?php endif; ?>
 
-      <?php elseif ($rol == 2):?>
-        <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-
-      <?php elseif ($rol == 3):?>
+      <?php if ($rol == 3): ?>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
         <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
       <?php endif; ?>

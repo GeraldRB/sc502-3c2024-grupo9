@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
-    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
-    exit;
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
 }
 
 $rol = $_SESSION['id_rol'];
@@ -13,6 +13,7 @@ $ok = isset($_GET['success']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,14 +53,15 @@ $ok = isset($_GET['success']);
     main::before {
       content: "";
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(255, 255, 255, 0.8);
       z-index: 1;
     }
 
-    main > * {
+    main>* {
       position: relative;
       z-index: 2;
     }
@@ -110,29 +112,39 @@ $ok = isset($_GET['success']);
 
 <body class="bg-light">
 
-  <nav class="navbar navbar-expand-lg px-4">
+  <nav class="navbar navbar-expand-lg navbar-light px-4">
     <a class="navbar-brand" href="index.php">
-      <img src="../public/logo.jpg" alt="Logo Guardería">
+      <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="nav" class="collapse navbar-collapse justify-content-end">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+
         <?php if ($rol == 1 || $rol == 2): ?>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'recomendaciones.php' ? ' active' : '' ?>" href="recomendaciones.php">Recomendaciones</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'matricula.php' ? ' active' : '' ?>" href="matricula.php">Matrícula</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'faqs.php' ? ' active' : '' ?>" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'citas.php' ? ' active' : '' ?>" href="citas.php">Citas</a></li>
-          <li class="nav-item"><a class="nav-link active" href="contacto.php">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
         <?php endif; ?>
+
         <?php if ($rol == 1): ?>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'programas.php' ? ' active' : '' ?>" href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'listaProgramas.php' ? ' active' : '' ?>" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
         <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
       </ul>
     </div>
   </nav>
+
 
   <main class="shadow p-4">
     <div class="container py-4">
@@ -196,4 +208,5 @@ $ok = isset($_GET['success']);
   <script src="programa.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -9,10 +9,12 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
     exit();
 }
 
+$rol = $_SESSION['id_rol']; // ← para el navbar
+
 require_once("../../accesoDatos/conexion.php");
 $conexion = abrirConexion();
 
-$nombre = $correo = $contraseña = $rol = "";
+$nombre = $correo = $contraseña = "";
 $estado = 1;
 $mensajeError = "";
 
@@ -20,17 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre']);
     $correo = trim($_POST['correo']);
     $contraseña = trim($_POST['contraseña']);
-    $rol = (int) $_POST['id_rol'];
+    $rolSeleccionado = (int) $_POST['id_rol'];
     $estado = isset($_POST['estado']) ? 1 : 0;
     $fecha = date('Y-m-d H:i:s');
 
-    if ($nombre === "" || $correo === "" || $contraseña === "" || $rol <= 0) {
+    if ($nombre === "" || $correo === "" || $contraseña === "" || $rolSeleccionado <= 0) {
         $mensajeError = "Todos los campos son obligatorios.";
     } else {
         $sql = "INSERT INTO usuarios (nombre, correo, contraseña, id_rol, estado, fecha_registro)
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conexion->prepare($sql);
-        $stmt->bind_param("sssiss", $nombre, $correo, $contraseña, $rol, $estado, $fecha);
+        $stmt->bind_param("sssiss", $nombre, $correo, $contraseña, $rolSeleccionado, $estado, $fecha);
 
         if ($stmt->execute()) {
             cerrarConexion($conexion);
@@ -93,7 +95,7 @@ $roles = $conexion->query("SELECT id_rol, nombre_rol FROM roles");
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.85);
             z-index: 1;
         }
 
@@ -129,92 +131,101 @@ $roles = $conexion->query("SELECT id_rol, nombre_rol FROM roles");
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light px-4">
-        <a class="navbar-brand" href="../index.php">
-            <img src="../../public/logo.jpg" alt="REDCUDI Logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
+<nav class="navbar navbar-expand-lg navbar-light px-4">
+    <a class="navbar-brand" href="../index.php">
+        <img src="../../public/logo.jpg" alt="REDCUDI Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+
+            <?php if ($rol == 1 || $rol == 2): ?>
                 <li class="nav-item"><a class="nav-link" href="../recomendaciones.php">Recomendaciones</a></li>
                 <li class="nav-item"><a class="nav-link" href="../matricula.php">Matrícula</a></li>
                 <li class="nav-item"><a class="nav-link" href="../faqs.php">FAQs</a></li>
                 <li class="nav-item"><a class="nav-link" href="../citas.php">Citas</a></li>
-                <li class="nav-item"><a class="nav-link" href="../programas.php">Programas Educativos</a></li>
                 <li class="nav-item"><a class="nav-link" href="../contacto.php">Contacto</a></li>
-                <li class="nav-item"><a class="nav-link active" href="listaUsuarios.php">Lista de Usuarios</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <main>
-        <div class="card">
-            <h2 class="text-center mb-4">Registrar Usuario</h2>
-
-            <?php if ($mensajeError): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($mensajeError) ?></div>
             <?php endif; ?>
 
-            <form method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($nombre) ?>"
-                        required>
-                </div>
+            <?php if ($rol == 1): ?>
+                <li class="nav-item"><a class="nav-link" href="../programas.php">Programas Educativos</a></li>
+                <li class="nav-item"><a class="nav-link" href="../tablas/listaProgramas.php">Lista de Programas</a></li>
+                <li class="nav-item"><a class="nav-link active" href="listaUsuarios.php">Lista de Usuarios</a></li>
+            <?php endif; ?>
 
-                <div class="mb-3">
-                    <label class="form-label">Correo</label>
-                    <input type="email" name="correo" class="form-control" value="<?= htmlspecialchars($correo) ?>"
-                        required>
-                </div>
+            <?php if ($rol == 3): ?>
+                <li class="nav-item"><a class="nav-link" href="../faqs.php">FAQs</a></li>
+                <li class="nav-item"><a class="nav-link" href="../contacto.php">Contacto</a></li>
+            <?php endif; ?>
 
-                <div class="mb-3">
-                    <label class="form-label">Contraseña</label>
-                    <input type="password" name="contraseña" class="form-control" required>
-                </div>
+        </ul>
+    </div>
+</nav>
 
-                <div class="mb-3">
-                    <label class="form-label">Rol</label>
-                    <select name="id_rol" class="form-select" required>
-                        <option value="">Seleccione un rol</option>
-                        <?php while ($r = $roles->fetch_assoc()): ?>
-                            <option value="<?= $r['id_rol'] ?>" <?= $rol == $r['id_rol'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($r['nombre_rol']) ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
+<main>
+    <div class="card">
+        <h2 class="text-center mb-4">Registrar Usuario</h2>
 
-                <div class="form-check form-switch mb-4">
-                    <input class="form-check-input" type="checkbox" name="estado" id="estado" checked>
-                    <label class="form-check-label" for="estado">Activo</label>
-                </div>
+        <?php if ($mensajeError): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($mensajeError) ?></div>
+        <?php endif; ?>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa-solid fa-user-plus me-1"></i> Registrar
-                    </button>
-                    <a href="listaUsuarios.php" class="btn btn-secondary">
-                        <i class="fa-solid fa-ban me-1"></i> Cancelar
-                    </a>
-                </div>
-            </form>
-        </div>
-    </main>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($nombre) ?>" required>
+            </div>
 
-    <footer>
-        <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
-        <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
-        <p><strong>Distrito:</strong> Hospital</p>
-        <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
-        <p><strong>Teléfono:</strong> 2221-7722</p>
-        <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
-    </footer>
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input type="email" name="correo" class="form-control" value="<?= htmlspecialchars($correo) ?>" required>
+            </div>
 
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" name="contraseña" class="form-control" required>
+            </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <div class="mb-3">
+                <label class="form-label">Rol</label>
+                <select name="id_rol" class="form-select" required>
+                    <option value="">Seleccione un rol</option>
+                    <?php while ($r = $roles->fetch_assoc()): ?>
+                        <option value="<?= $r['id_rol'] ?>" <?= ($rolSeleccionado ?? '') == $r['id_rol'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($r['nombre_rol']) ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="form-check form-switch mb-4">
+                <input class="form-check-input" type="checkbox" name="estado" id="estado" <?= $estado ? 'checked' : '' ?>>
+                <label class="form-check-label" for="estado">Activo</label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-user-plus me-1"></i> Registrar
+                </button>
+                <a href="listaUsuarios.php" class="btn btn-secondary">
+                    <i class="fa-solid fa-ban me-1"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
+    <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
+    <p><strong>Distrito:</strong> Hospital</p>
+    <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
+    <p><strong>Teléfono:</strong> 2221-7722</p>
+    <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
