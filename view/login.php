@@ -1,11 +1,18 @@
 <?php
 session_start();
+require_once '../logs/logsErrores.php';
 
 if (isset($_SESSION["usuarioID"]) && isset($_SESSION["id_rol"])) {
+    registrarError("Intento de acceder a login con sesión activa", "INFO");
     header("Location: index.php");
     exit();
 }
+
+if (isset($_GET['error'])) {
+    registrarError("Fallo de autenticación: " . $_GET['error'], "WARN");
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

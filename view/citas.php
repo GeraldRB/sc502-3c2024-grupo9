@@ -2,204 +2,258 @@
 session_start();
 
 if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
-  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
-  exit;
+    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+    exit;
 }
+
+require_once("../accesoDatos/conexion.php");
 
 $rol = $_SESSION['id_rol'];
 $usuarioID = $_SESSION['usuarioID'];
-?>
+$ok = isset($_GET['ok']);
+$err = $_GET['err'] ?? null;
 
+$citas = [];
+
+if ($rol == 1) {
+    $conn = abrirConexion();
+    $res = $conn->query("SELECT C.*, U.nombre AS encargado FROM citas C INNER JOIN usuarios U ON C.id_usuario = U.id_usuario ORDER BY fecha_cita DESC");
+    while ($row = $res->fetch_assoc()) {
+        $citas[] = $row;
+    }
+    cerrarConexion($conn);
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Agendar Cita</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f7f9fb;
-      font-family: 'Poppins', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <title>Citas | Guardería</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
 
-    .navbar {
-      background-color: #fff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: #f0f9ff;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .navbar-brand img {
-      height: 50px;
-    }
+        main {
+            flex: 1;
+        }
 
-    h3,
-    h4 {
-      color: #20b2aa;
-      font-weight: 600;
-    }
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
 
-    .card {
-      border: none;
-      border-radius: 1rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    }
+        .navbar-brand img {
+            height: 50px;
+        }
 
-    .form-label {
-      font-weight: 500;
-    }
+        .nav-link {
+            color: #333;
+            margin: 0 10px;
+            font-weight: 500;
+        }
 
-    .btn-primary {
-      background-color: #20b2aa;
-      border-color: #20b2aa;
-    }
+        .nav-link:hover,
+        .nav-link.active {
+            color: #20b2aa;
+        }
 
-    .btn-primary:hover {
-      background-color: #1e9b98;
-    }
-  </style>
+        .card {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #20b2aa;
+            border-color: #20b2aa;
+        }
+
+        .btn-primary:hover {
+            background-color: #198c85;
+            border-color: #198c85;
+        }
+
+        footer {
+            background-color: #20b2aa;
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            margin: 20px auto;
+            width: 95%;
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background-color: #e6f7f5;
+        }
+
+        .alert {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
 </head>
-
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light px-4">
+<nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="index.php">
-      <img src="../public/logo.jpg" alt="REDCUDI Logo">
+        <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-
-        <?php if ($rol == 1 || $rol == 2): ?>
-          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
-          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <?php endif; ?>
-
-        <?php if ($rol == 1): ?>
-          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
-          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
-        <?php endif; ?>
-
-        <?php if ($rol == 3): ?>
-          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <?php endif; ?>
-
-      </ul>
+    <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+            <?php if ($rol == 1 || $rol == 2): ?>
+                <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+                <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+                <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+                <li class="nav-item"><a class="nav-link active" href="citas.php">Citas</a></li>
+                <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+            <?php endif; ?>
+            <?php if ($rol == 1): ?>
+                <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+                <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+                <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
+            <?php endif; ?>
+        </ul>
     </div>
-  </nav>
+</nav>
+
+<main>
+<?php if ($rol == 2): ?>
+    <div class="card">
+        <h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
+    <i class="fas fa-calendar-plus me-2"></i>Agendar una nueva cita
+</h3>
 
 
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6 mb-4 mb-md-0">
-        <div class="card p-4">
-          <h3 class="text-center mb-4">Agendar Cita</h3>
-
-          <?php if (isset($_GET["ok"])): ?>
+        <?php if ($ok): ?>
             <div class="alert alert-success">Cita creada correctamente.</div>
-          <?php elseif (isset($_GET["err"])):
-            $map = [
-              "campos" => "Completá todos los campos.",
-              "pasado" => "La fecha/hora debe ser futura.",
-              "choque" => "Ya tenés una cita en esa fecha/hora.",
-              "ins" => "No se pudo guardar la cita.",
-              "ex" => "Error inesperado. Intenta de nuevo."
-            ];
-            $msg = $map[$_GET["err"]] ?? "Error.";
-            ?>
-            <div class="alert alert-danger"><?php echo $msg; ?></div>
-          <?php endif; ?>
+        <?php elseif ($err === "campos"): ?>
+            <div class="alert alert-danger">Todos los campos son obligatorios.</div>
+        <?php elseif ($err === "pasado"): ?>
+            <div class="alert alert-danger">La fecha ingresada ya pasó.</div>
+        <?php elseif ($err === "choque"): ?>
+            <div class="alert alert-danger">Ya tiene una cita agendada para ese momento.</div>
+        <?php elseif ($err === "formato"): ?>
+            <div class="alert alert-danger">Formato de fecha inválido.</div>
+        <?php elseif ($err): ?>
+            <div class="alert alert-danger">Error al procesar la cita. Intente de nuevo.</div>
+        <?php endif; ?>
 
-          <form method="POST" action="../controller/citas.php">
+        <form method="POST" action="../controller/citas.php">
             <div class="mb-3">
-              <label for="cedula_encargado" class="form-label">Cédula del Encargado</label>
-              <input type="text" class="form-control" id="cedula_encargado" name="cedula_encargado" required>
+                <label class="form-label">Cédula del Encargado</label>
+                <input type="text" name="cedula_encargado" class="form-control" required>
             </div>
-
             <div class="mb-3">
-              <label for="cedula_nino" class="form-label">Cédula del Niño</label>
-              <input type="text" class="form-control" id="cedula_nino" name="cedula_nino" required>
+                <label class="form-label">Cédula del Niño</label>
+                <input type="text" name="cedula_nino" class="form-control" required>
             </div>
-
             <div class="mb-3">
-              <label for="fecha_cita" class="form-label">Fecha y hora</label>
-              <input type="text" class="form-control" id="fecha_cita" name="fecha_cita"
-                placeholder="Seleccioná fecha y hora" required>
+                <label class="form-label">Fecha y hora</label>
+                <input type="text" name="fecha_cita" class="form-control" placeholder="Seleccione fecha y hora" required>
             </div>
-
             <div class="mb-3">
-              <label for="motivo" class="form-label">Motivo</label>
-              <select class="form-select" id="motivo" name="motivo" required>
-                <option value="">Seleccione un motivo</option>
-                <option>Consulta de programas</option>
-                <option>Pagos</option>
-                <option>Información general</option>
-                <option>Reclamos</option>
-                <option>Otros</option>
-              </select>
+                <label class="form-label">Motivo</label>
+                <select name="motivo" class="form-select" required>
+                    <option value="">Seleccione un motivo</option>
+                    <option>Consulta de programas</option>
+                    <option>Pagos</option>
+                    <option>Información general</option>
+                    <option>Reclamos</option>
+                    <option>Otros</option>
+                </select>
             </div>
-
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Agendar Cita</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Lista de citas -->
-      <div class="col-md-6">
-        <div class="card p-4">
-          <h4 class="mb-3">Mis próximas citas</h4>
-          <ul class="list-group">
-            <?php
-            require_once("../accesoDatos/conexion.php");
-            try {
-              $cn = abrirConexion();
-              $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
-              $q->bind_param("i", $usuarioID);
-              $q->execute();
-              $res = $q->get_result();
-              if ($res->num_rows === 0) {
-                echo '<li class="list-group-item">No tenés citas próximas.</li>';
-              } else {
-                while ($row = $res->fetch_assoc()) {
-                  echo '<li class="list-group-item d-flex justify-content-between align-items-center">';
-                  echo '<div><strong>' . htmlspecialchars($row["motivo"]) . '</strong><br><small>' . $row["fecha_cita"] . '</small></div>';
-                  echo '<span class="badge bg-secondary">' . $row["estado"] . '</span>';
-                  echo '</li>';
-                }
-              }
-            } catch (Exception $e) {
-              echo '<li class="list-group-item text-danger">No se pudieron cargar las citas.</li>';
-            } finally {
-              if (isset($cn))
-                cerrarConexion($cn);
-            }
-            ?>
-          </ul>
-        </div>
-      </div>
+            <button type="submit" class="btn btn-primary w-100">Agendar Cita</button>
+        </form>
     </div>
-  </div>
+<?php endif; ?>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script>
-    flatpickr("#fecha_cita", {
-      enableTime: true,
-      dateFormat: "Y-m-d H:i",
-      time_24hr: true,
-      minDate: "today"
-    });
-  </script>
+<?php if ($rol == 1): ?>
+<div class="card mt-5 mb-5" style="max-width: 900px;">
+    <h3 class="text-center mb-4" style="color: #20b2aa; font-weight: 600;">
+        <i class="fas fa-calendar-check me-2"></i>Todas las citas programadas
+    </h3>
+
+    <?php if (empty($citas)): ?>
+        <p class="text-center text-muted">No hay citas registradas.</p>
+    <?php else: ?>
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th scope="col"><i class="fas fa-user"></i> Nombre</th>
+                        <th scope="col"><i class="fas fa-calendar-day"></i> Fecha y hora</th>
+                        <th scope="col"><i class="fas fa-question-circle"></i> Motivo</th>
+                        <th scope="col"><i class="fas fa-info-circle"></i> Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($citas as $c): ?>
+                        <tr class="text-center">
+                            <td><?= htmlspecialchars($c["encargado"]) ?></td>
+                            <td><?= htmlspecialchars($c["fecha_cita"]) ?></td>
+                            <td><?= htmlspecialchars($c["motivo"]) ?></td>
+                            <td>
+                                <span class="badge bg-secondary px-3 py-2">
+                                    <?= htmlspecialchars($c["estado"]) ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+
+</main>
+
+  <footer>
+    <p><strong>Modalidad:</strong> C.I.D.A.I.</p>
+    <p><strong>Provincia:</strong> San José &nbsp;&nbsp; <strong>Cantón:</strong> San José</p>
+    <p><strong>Distrito:</strong> Hospital</p>
+    <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Pley, contiguo a Iglesia Casa de Bendición</p>
+    <p><strong>Teléfono:</strong> 2221-7722</p>
+    <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
+  </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+flatpickr("input[name='fecha_cita']", {
+    enableTime: true,
+    dateFormat: "d/m/Y H:i",
+    minDate: "today",
+    time_24hr: true,
+    locale: {
+        firstDayOfWeek: 1
+    }
+});
+</script>
 </body>
-
 </html>
