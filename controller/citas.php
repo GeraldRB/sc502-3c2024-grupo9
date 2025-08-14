@@ -1,60 +1,64 @@
 <?php
-require_once("../accesoDatos/conexion.php");
+session_start();
+require_once '../accesoDatos/conexion.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $cedula_encargado = trim($_POST["cedula_encargado"] ?? "");
-    $cedula_nino      = trim($_POST["cedula_nino"] ?? "");
-    $fecha_cita       = trim($_POST["fecha_cita"] ?? "");
-    $motivo           = trim($_POST["motivo"] ?? "");
+if (!isset($_SESSION['usuarioID'])) {
+    header("Location: ../view/login.php?error=" . urlencode("Inicie sesión para continuar."));
+    exit;
+}
 
-    if ($cedula_encargado === "" || $cedula_nino === "" || $fecha_cita === "" || $motivo === "") {
-        header("Location: ../view/citas.php?err=campos");
-        exit();
-    }
-
-    try {
-        $cn = abrirConexion();
-
-        // prototipo id_usuario = 1 o el que este loguead
-        // si se manjea una sesion se remplaza por $_SESSION['id_usuario'].
-        $idUsuario = 1;
-
-        // se valida que la fecha y hora seam futura
-        $dt = new DateTime($fecha_cita);
-        if ($dt < new DateTime()) {
-            header("Location: ../view/citas.php?err=pasado");
-            exit();
-        }
-
-        // Se valida choque de cita (misma fecha y hora para el mismo usuario)
-        $chk = $cn->prepare("SELECT COUNT(*) AS total FROM CITAS WHERE id_usuario = ? AND fecha_cita = ?");
-        $chk->bind_param("is", $idUsuario, $fecha_cita);
-        $chk->execute();
-        $r = $chk->get_result()->fetch_assoc();
-        if ((int)$r["total"] > 0) {
-            header("Location: ../view/citas.php?err=choque");
-            exit();
-        }
-
-        // se inserta la cita
-        $ins = $cn->prepare("INSERT INTO CITAS (id_usuario, fecha_cita, motivo, estado) VALUES (?, ?, ?, 'Pendiente')");
-        $ins->bind_param("iss", $idUsuario, $fecha_cita, $motivo);
-
-        if ($ins->execute()) {
-            header("Location: ../view/citas.php?ok=1");
-        } else {
-            header("Location: ../view/citas.php?err=ins");
-        }
-        exit();
-
-    } catch (Exception $e) {
-        error_log("CITAS ERROR: " . $e->getMessage());
-        header("Location: ../view/citas.php?err=ex");
-        exit();
-    } finally {
-        if (isset($cn)) cerrarConexion($cn);
-    }
-} else {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../view/citas.php");
-    exit();
+    exit;
+}
+
+$usuarioID = $_SESSION['usuarioID'];
+$cedula_encargado = trim($_POST['cedula_encargado'] ?? '');
+$cedula_nino = trim($_POST['cedula_nino'] ?? '');
+$fecha_cita = trim($_POST['fecha_cita'] ?? '');
+$motivo = trim($_POST['motivo'] ?? '');
+
+// Validar campos
+if (empty($cedula_encargado) || empty($cedula_nino) || empty($fecha_cita) || empty($motivo)) {
+    header("Location: ../view/citas.php?err=campos");
+    exit;
+}
+
+// Validar fecha futura
+if (strtotime($fecha_cita) <= time()) {
+    header("Location: ../view/citas.php?err=pasado");
+    exit;
+}
+
+try {
+    $conn = abrirConexion();
+
+    // Validar si ya hay una cita agendada para ese usuario en ese horario
+    $stmt = $conn->prepare("SELECT id_cita FROM CITAS WHERE id_usuario = ? AND fecha_cita = ?");
+    $stmt->bind_param("is", $usuarioID, $fecha_cita);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows > 0) {
+        cerrarConexion($conn);
+        header("Location: ../view/citas.php?err=choque");
+        exit;
+    }
+
+    // Insertar cita
+    $estado = 'Pendiente';
+    $stmt = $conn->prepare("INSERT INTO CITAS (id_usuario, fecha_cita, motivo, estado) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("isss", $usuarioID, $fecha_cita, $motivo, $estado);
+
+    if ($stmt->execute()) {
+        cerrarConexion($conn);
+        header("Location: ../view/citas.php?ok=1");
+    } else {
+        cerrarConexion($conn);
+        header("Location: ../view/citas.php?err=ins");
+    }
+
+} catch (Exception $e) {
+    header("Location: ../view/citas.php?err=ex");
+    exit;
 }
