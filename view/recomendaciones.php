@@ -1,16 +1,32 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
+}
+
+$rol = $_SESSION['id_rol'];
+$usuarioID = $_SESSION['usuarioID'];
+
+$errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
+$ok = isset($_GET['success']);
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Consejos y Recomendaciones | Guardería</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
   <style>
-    html, body {
+    html,
+    body {
       height: 100%;
     }
 
@@ -92,25 +108,39 @@
 
 <body>
 
-  <nav class="navbar navbar-expand-lg px-4">
+  <nav class="navbar navbar-expand-lg navbar-light px-4">
     <a class="navbar-brand" href="index.php">
       <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="nav" class="collapse navbar-collapse justify-content-end">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+
+        <?php if ($rol == 1 || $rol == 2): ?>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 1): ?>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
       </ul>
     </div>
   </nav>
+
 
   <main>
     <section class="page-header container">
@@ -119,99 +149,177 @@
     </section>
 
     <div class="container">
-      <div class="accordion" id="accordionExample">
+      <div class="accordion" id="accordionRecomendaciones">
 
-        <!-- Recomendaciones en formato acordeón -->
-        <?php
-          $recomendaciones = [
-            ["fas fa-baby text-primary", "Recomendaciones para el primer día", [
-              "Qué llevar (ropa extra, pañales, biberones, etc.)",
-              "Cómo preparar al niño emocionalmente",
-              "Llegar con tiempo y calma",
-              "No alargar las despedidas"
-            ]],
-            ["fas fa-heartbeat text-danger", "Recomendaciones de salud e higiene", [
-              "Mantener al niño en casa si presenta fiebre o síntomas contagiosos",
-              "Informar sobre alergias o medicamentos",
-              "Llevar artículos personales marcados con su nombre"
-            ]],
-            ["fas fa-utensils text-warning", "Recomendaciones para la alimentación", [
-              "Si se permite traer comida de casa: sugerencias saludables",
-              "Carné de vacunas al día",
-              "Certificado médico reciente",
-              "Formulario de inscripción completo"
-            ]],
-            ["fas fa-users text-info", "Recomendaciones generales para padres", [
-              "Fomentar rutinas en casa",
-              "Leer juntos antes de dormir",
-              "Ser pacientes con los cambios de conducta",
-              "Participar en actividades escolares o reuniones"
-            ]],
-            ["fas fa-comments text-success", "Recomendaciones para una buena comunicación", [
-              "Mantener contacto constante con los educadores",
-              "Revisar diariamente el cuaderno o app de comunicación",
-              "Informar cualquier cambio familiar importante"
-            ]],
-            ["fas fa-child text-primary", "Consejos para la adaptación de los niños", [
-              "Explicar con anticipación que irá a la guardería",
-              "Visitar el lugar antes del primer día",
-              "Enviar un objeto que le dé seguridad (peluche, mantita)",
-              "Ser paciente en el proceso de adaptación"
-            ]],
-            ["fas fa-book-reader text-secondary", "Actividades para reforzar el aprendizaje en casa", [
-              "Leer un cuento todos los días",
-              "Jugar con bloques y rompecabezas",
-              "Dibujar y colorear juntos",
-              "Realizar juegos que estimulen la memoria"
-            ]],
-            ["fas fa-shield-alt text-danger", "Seguridad en el centro educativo", [
-              "Ingresar y salir solo con autorización previa",
-              "Presentar carnet de retiro al entrar",
-              "No dejar objetos peligrosos en mochilas"
-            ]],
-            ["fas fa-calendar-alt text-warning", "Participación en eventos escolares", [
-              "Asistir a las reuniones de padres",
-              "Participar en celebraciones y actividades especiales",
-              "Proporcionar apoyo en excursiones",
-              "Colaborar con materiales cuando sea necesario"
-            ]],
-            ["fas fa-bed text-info", "Consejos para un descanso saludable", [
-              "Mantener un horario fijo para dormir",
-              "Evitar pantallas antes de acostarse",
-              "Crear un ambiente relajado y sin ruidos",
-              "Usar pijama cómoda y apropiada para el clima"
-            ]]
-          ];
-
-          foreach ($recomendaciones as $index => [$icono, $titulo, $items]) {
-            echo <<<HTML
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec$index">
-                  <i class="$icono me-2"></i> $titulo
-                </button>
-              </h2>
-              <div id="rec$index" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                  • {implode("<br>• ", $items)}
-                </div>
-              </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec0">
+              <i class="fas fa-baby me-2 text-primary"></i> Recomendaciones para el primer día
+            </button>
+          </h2>
+          <div id="rec0" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Qué llevar (ropa extra, pañales, biberones, etc.)<br>
+              Cómo preparar al niño emocionalmente<br>
+              Llegar con tiempo y calma<br>
+              No alargar las despedidas
             </div>
-            HTML;
-          }
-        ?>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec1">
+              <i class="fas fa-heartbeat me-2 text-danger"></i> Recomendaciones de salud e higiene
+            </button>
+          </h2>
+          <div id="rec1" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Mantener al niño en casa si presenta fiebre o síntomas<br>
+              Informar sobre alergias o medicamentos<br>
+              Llevar artículos personales marcados
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec2">
+              <i class="fas fa-utensils me-2 text-warning"></i> Recomendaciones para la alimentación
+            </button>
+          </h2>
+          <div id="rec2" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Sugerencias saludables para refrigerios<br>
+              Carné de vacunas al día<br>
+              Certificado médico reciente
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec3">
+              <i class="fas fa-people-roof me-2 text-info"></i> Recomendaciones generales para padres
+            </button>
+          </h2>
+          <div id="rec3" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Fomentar rutinas en casa<br>
+              Leer juntos antes de dormir<br>
+              Participar en actividades escolares
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec4">
+              <i class="fas fa-comments me-2 text-success"></i> Recomendaciones para una buena comunicación
+            </button>
+          </h2>
+          <div id="rec4" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Contacto constante con los educadores<br>
+              Revisar cuadernos o apps de comunicación<br>
+              Avisar sobre cambios importantes en casa
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec5">
+              <i class="fas fa-child me-2 text-primary"></i> Consejos para la adaptación de los niños
+            </button>
+          </h2>
+          <div id="rec5" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Explicar con anticipación que irá a la guardería<br>
+              Visitar el lugar antes del primer día<br>
+              Enviar un objeto que le dé seguridad (peluche, mantita)<br>
+              Ser paciente en el proceso de adaptación
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec6">
+              <i class="fas fa-book-reader me-2 text-secondary"></i> Actividades para reforzar el aprendizaje en casa
+            </button>
+          </h2>
+          <div id="rec6" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Leer un cuento todos los días<br>
+              Jugar con bloques y rompecabezas<br>
+              Dibujar y colorear juntos<br>
+              Realizar juegos que estimulen la memoria
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec7">
+              <i class="fas fa-shield-alt me-2 text-danger"></i> Seguridad en el centro educativo
+            </button>
+          </h2>
+          <div id="rec7" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Ingresar y salir solo con autorización previa<br>
+              Presentar carnet de retiro al entrar<br>
+              No dejar objetos peligrosos en mochilas
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec8">
+              <i class="fas fa-calendar-alt me-2 text-warning"></i> Participación en eventos escolares
+            </button>
+          </h2>
+          <div id="rec8" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Asistir a las reuniones de padres<br>
+              Participar en celebraciones y actividades especiales<br>
+              Proporcionar apoyo en excursiones<br>
+              Colaborar con materiales cuando sea necesario
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rec9">
+              <i class="fas fa-bed me-2 text-info"></i> Consejos para un descanso saludable
+            </button>
+          </h2>
+          <div id="rec9" class="accordion-collapse collapse" data-bs-parent="#accordionRecomendaciones">
+            <div class="accordion-body">
+              Mantener un horario fijo para dormir<br>
+              Evitar pantallas antes de acostarse<br>
+              Crear un ambiente relajado y sin ruidos<br>
+              Usar pijama cómoda y apropiada para el clima
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
 
   <footer>
     <p><strong>Modalidad:</strong> C.I.D.A.I</p>
-    <p><strong>Provincia:</strong> San José &nbsp; <strong>Cantón:</strong> San José &nbsp; <strong>Distrito:</strong> Hospital</p>
-    <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Play, contiguo a iglesia Casa de Bendición</p>
-    <p><strong>Teléfono:</strong> 2227-7722</p>
+    <p><strong>Provincia:</strong> San José &nbsp; <strong>Cantón:</strong> San José &nbsp; <strong>Distrito:</strong>
+      Hospital</p>
+    <p><strong>Dirección:</strong> Barrio Cuba Los Pinos, detrás del Palí, contiguo a la Iglesia Casa de Bendición</p>
+    <p><strong>Teléfono:</strong> 2227-7702</p>
     <p><strong>Correo:</strong> ministeriodelamisericordia2017@gmail.com</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

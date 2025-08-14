@@ -1,73 +1,168 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
+}
+
+$rol = $_SESSION['id_rol'];
+$usuarioID = $_SESSION['usuarioID'];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto</title>
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/estilos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7f9fb;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
+    }
+
+    .navbar-brand img {
+      height: 50px;
+    }
+
+    h1,
+    h2 {
+      color: #20b2aa;
+      font-weight: 600;
+    }
+
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-primary {
+      background-color: #20b2aa;
+      border-color: #20b2aa;
+    }
+
+    .btn-primary:hover {
+      background-color: #1d9797;
+    }
+
+    .list-group-item {
+      border-radius: 0.5rem;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, .05);
+    }
+
+    .text-muted {
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
-<body class="bg-light">
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light px-4">
+    <a class="navbar-brand" href="index.php">
+      <img src="../public/logo.jpg" alt="REDCUDI Logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+
+        <?php if ($rol == 1 || $rol == 2): ?>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 1): ?>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
+      </ul>
+    </div>
+  </nav>
+
+
   <div class="container py-5">
     <div class="text-center mb-4">
-      <h1 class="fw-bold">Contacto</h1>
-      <p class="lead">Envíanos tus consultas o comentarios y te respondemos pronto.</p>
-
-      <?php if (isset($_GET["ok"])): ?>
-        <div class="alert alert-success">Mensaje enviado correctamente.</div>
-      <?php elseif (isset($_GET["err"])): ?>
-        <div class="alert alert-danger">No se pudo enviar. Intenta de nuevo.</div>
-      <?php endif; ?>
+      <h1>Contacto</h1>
+      <p class="lead">Envíanos tus consultas o comentarios y te responderemos pronto.</p>
     </div>
 
-    <div class="card p-4 shadow-lg">
+    <?php if (isset($_GET["ok"])): ?>
+      <div class="alert alert-success text-center">Mensaje enviado correctamente.</div>
+    <?php elseif (isset($_GET["err"])): ?>
+      <div class="alert alert-danger text-center">No se pudo enviar. Intenta de nuevo.</div>
+    <?php endif; ?>
+
+    <div class="card p-4 mb-5">
       <form method="POST" action="../controller/contacto.php">
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre completo</label>
           <input type="text" class="form-control" id="nombre" name="nombre" required>
         </div>
-
         <div class="mb-3">
-          <label for="correo" class="form-label">Correo electrónico</label> 
+          <label for="correo" class="form-label">Correo electrónico</label>
           <input type="email" class="form-control" id="correo" name="correo" required>
         </div>
-
         <div class="mb-3">
           <label for="mensaje" class="form-label">Mensaje</label>
           <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
         </div>
-
         <button type="submit" class="btn btn-primary w-100">Enviar mensaje</button>
       </form>
     </div>
 
     <div class="mt-5">
-      <h2 class="fw-bold text-center mb-3">Mensajes recibidos</h2>
+      <h2 class="text-center mb-4">Mensajes Recibidos</h2>
       <ul class="list-group">
         <?php
-          require_once("../accesoDatos/conexion.php");
-          try {
-            $cn = abrirConexion();
-            $rs = $cn->query("SELECT nombre, correo, mensaje, fecha_envio FROM CONTACTO ORDER BY id_contacto DESC LIMIT 20");
-            while ($row = $rs->fetch_assoc()):
-        ?>
-          <li class="list-group-item">
-            <strong><?php echo htmlspecialchars($row["nombre"]); ?></strong>
-            (<em><?php echo htmlspecialchars($row["correo"]); ?></em>)<br>
-            <?php echo nl2br(htmlspecialchars($row["mensaje"])); ?>
-            <div class="text-muted small">Enviado: <?php echo $row["fecha_envio"]; ?></div>
-          </li>
-        <?php
-            endwhile;
-          } catch (Exception $e) {
-            echo '<li class="list-group-item text-danger">No se pudieron cargar los mensajes.</li>';
-          } finally {
-            if (isset($cn)) cerrarConexion($cn);
-          }
+        require_once("../accesoDatos/conexion.php");
+        try {
+          $cn = abrirConexion();
+          $rs = $cn->query("SELECT nombre, correo, mensaje, fecha_envio FROM CONTACTO ORDER BY id_contacto DESC LIMIT 20");
+          while ($row = $rs->fetch_assoc()):
+            ?>
+            <li class="list-group-item">
+              <strong><?= htmlspecialchars($row["nombre"]) ?></strong>
+              <span class="badge bg-light text-dark ms-2"><?= htmlspecialchars($row["correo"]) ?></span>
+              <p class="mb-1 mt-2"><?= nl2br(htmlspecialchars($row["mensaje"])) ?></p>
+              <div class="text-muted">Enviado: <?= $row["fecha_envio"] ?></div>
+            </li>
+            <?php
+          endwhile;
+        } catch (Exception $e) {
+          echo '<li class="list-group-item text-danger">No se pudieron cargar los mensajes.</li>';
+        } finally {
+          if (isset($cn))
+            cerrarConexion($cn);
+        }
         ?>
       </ul>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

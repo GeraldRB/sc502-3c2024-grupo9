@@ -1,5 +1,19 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
+}
+
+$rol = $_SESSION['id_rol'];
+
+$errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
+$ok = isset($_GET['success']);
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,14 +53,15 @@
     main::before {
       content: "";
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(255, 255, 255, 0.8);
       z-index: 1;
     }
 
-    main > * {
+    main>* {
       position: relative;
       z-index: 2;
     }
@@ -98,7 +113,7 @@
 <body class="bg-light">
 
   <nav class="navbar navbar-expand-lg navbar-light px-4">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="index.php">
       <img src="../public/logo.jpg" alt="REDCUDI Logo">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -106,16 +121,30 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
-        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+
+        <?php if ($rol == 1 || $rol == 2): ?>
+          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 1): ?>
+          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link" href="usuarios/listaUsuarios.php">Lista de Usuarios</a></li>
+        <?php endif; ?>
+
+        <?php if ($rol == 3): ?>
+          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <?php endif; ?>
+
       </ul>
     </div>
   </nav>
+
 
   <main class="shadow p-4">
     <div class="container py-4">
@@ -164,25 +193,6 @@
           <button type="submit" class="btn btn-success w-100">Guardar Programa</button>
         </form>
       </div>
-
-      <div>
-        <h2 class="fw-bold text-center mb-3">Lista de Programas</h2>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>Título</th>
-                <th>Nivel</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Activo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tablaProgramas"></tbody>
-          </table>
-        </div>
-      </div>
     </div>
   </main>
 
@@ -198,4 +208,5 @@
   <script src="programa.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
