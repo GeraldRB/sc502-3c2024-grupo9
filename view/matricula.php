@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
-    header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
-    exit;
+  header("Location: ./login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
 }
 
 $rol = $_SESSION['id_rol'];
@@ -38,6 +38,7 @@ try {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Formulario de Matrícula</title>
@@ -49,7 +50,9 @@ try {
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
-    .navbar-brand img { height: 50px; }
+    .navbar-brand img {
+      height: 50px;
+    }
 
     main {
       flex: 1;
@@ -73,7 +76,7 @@ try {
       z-index: 1;
     }
 
-    main > * {
+    main>* {
       position: relative;
       z-index: 2;
     }
@@ -117,36 +120,49 @@ try {
       font-size: 0.9rem;
     }
 
-    footer p { margin: 3px 0; }
+    footer p {
+      margin: 3px 0;
+    }
 
     @media (max-width: 768px) {
-      .hero-content h1 { font-size: 1.8rem; }
+      .hero-content h1 {
+        font-size: 1.8rem;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-light px-4">
-    <a class="navbar-brand" href="#">
-      <img src="../public/logo.jpg" alt="REDCUDI Logo">
+  <nav class="navbar navbar-expand-lg px-4">
+    <a class="navbar-brand" href="index.php">
+      <img src="../public/logo.jpg" alt="Logo Guardería">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <div id="nav" class="collapse navbar-collapse justify-content-end">
       <ul class="navbar-nav">
         <?php if ($rol == 1 || $rol == 2): ?>
-          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
-          <li class="nav-item"><a class="nav-link active" href="matricula.php">Matrícula</a></li>
-          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+          <li class="nav-item"><a
+              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'recomendaciones.php' ? ' active' : '' ?>"
+              href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a
+              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'matricula.php' ? ' active' : '' ?>"
+              href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'faqs.php' ? ' active' : '' ?>"
+              href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'citas.php' ? ' active' : '' ?>"
+              href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contacto.php">Contacto</a></li>
         <?php endif; ?>
-
         <?php if ($rol == 1): ?>
-          <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a
+              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'programas.php' ? ' active' : '' ?>"
+              href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a
+              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'listaProgramas.php' ? ' active' : '' ?>"
+              href="tablas/listaProgramas.php">Lista de Programas</a></li>
         <?php endif; ?>
       </ul>
     </div>
@@ -198,4 +214,5 @@ try {
   <script src="programa.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

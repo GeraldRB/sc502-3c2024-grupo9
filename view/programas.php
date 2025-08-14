@@ -181,25 +181,6 @@ $ok = isset($_GET['success']);
           <button type="submit" class="btn btn-success w-100">Guardar Programa</button>
         </form>
       </div>
-
-      <div>
-        <h2 class="fw-bold text-center mb-3">Lista de Programas</h2>
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>Título</th>
-                <th>Nivel</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Activo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tablaProgramas"></tbody>
-          </table>
-        </div>
-      </div>
     </div>
   </main>
 
