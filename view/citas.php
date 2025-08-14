@@ -6,12 +6,10 @@ if (!isset($_SESSION['usuarioID'], $_SESSION['id_rol'])) {
     exit;
 }
 
-$rol = $_SESSION['id_rol']; // 1 = admin, 2 = encargado
+$rol = $_SESSION['id_rol']; 
 $usuarioID = $_SESSION['usuarioID'];
-
-$errores = isset($_GET['error']) ? explode('|', $_GET['error']) : [];
-$ok = isset($_GET['success']);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,8 +17,10 @@ $ok = isset($_GET['success']);
   <title>Agendar Cita</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
+      background-color: #f7f9fb;
       font-family: 'Poppins', sans-serif;
     }
 
@@ -33,12 +33,32 @@ $ok = isset($_GET['success']);
       height: 50px;
     }
 
-    .card h3, .card h4 {
+    h3, h4 {
       color: #20b2aa;
+      font-weight: 600;
+    }
+
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: #20b2aa;
+      border-color: #20b2aa;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e9b98;
     }
   </style>
 </head>
-<body class="bg-light">
+<body>
 
   <nav class="navbar navbar-expand-lg px-4">
     <a class="navbar-brand" href="index.php">
@@ -66,9 +86,10 @@ $ok = isset($_GET['success']);
 
   <div class="container py-5">
     <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card p-4 shadow-sm">
-          <h3 class="mb-3 text-center">Agendar Cita</h3>
+      <!-- Formulario -->
+      <div class="col-md-6 mb-4 mb-md-0">
+        <div class="card p-4">
+          <h3 class="text-center mb-4">Agendar Cita</h3>
 
           <?php if (isset($_GET["ok"])): ?>
             <div class="alert alert-success">Cita creada correctamente.</div>
@@ -97,12 +118,12 @@ $ok = isset($_GET['success']);
             </div>
 
             <div class="mb-3">
-              <label for="fecha_cita" class="form-label">Fecha y hora de la cita</label>
+              <label for="fecha_cita" class="form-label">Fecha y hora</label>
               <input type="text" class="form-control" id="fecha_cita" name="fecha_cita" placeholder="Seleccioná fecha y hora" required>
             </div>
 
             <div class="mb-3">
-              <label for="motivo" class="form-label">Motivo de la cita</label>
+              <label for="motivo" class="form-label">Motivo</label>
               <select class="form-select" id="motivo" name="motivo" required>
                 <option value="">Seleccione un motivo</option>
                 <option>Consulta de programas</option>
@@ -120,34 +141,35 @@ $ok = isset($_GET['success']);
         </div>
       </div>
 
-      <div class="col-md-6 mt-4 mt-md-0">
-        <div class="card p-4 shadow-sm">
+      <!-- Lista de citas -->
+      <div class="col-md-6">
+        <div class="card p-4">
           <h4 class="mb-3">Mis próximas citas</h4>
           <ul class="list-group">
-          <?php
-            require_once("../accesoDatos/conexion.php");
-            try {
-              $cn = abrirConexion();
-              $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
-              $q->bind_param("i", $usuarioID);
-              $q->execute();
-              $res = $q->get_result();
-              if ($res->num_rows === 0){
-                echo '<li class="list-group-item">No tenés citas próximas.</li>';
-              } else {
-                while($row = $res->fetch_assoc()){
-                  echo '<li class="list-group-item">';
-                  echo '<strong>'.htmlspecialchars($row["motivo"]).'</strong> — ';
-                  echo $row["fecha_cita"].' <span class="badge bg-secondary ms-2">'.$row["estado"].'</span>';
-                  echo '</li>';
+            <?php
+              require_once("../accesoDatos/conexion.php");
+              try {
+                $cn = abrirConexion();
+                $q = $cn->prepare("SELECT fecha_cita, motivo, estado FROM CITAS WHERE id_usuario = ? AND fecha_cita >= NOW() ORDER BY fecha_cita ASC LIMIT 20");
+                $q->bind_param("i", $usuarioID);
+                $q->execute();
+                $res = $q->get_result();
+                if ($res->num_rows === 0){
+                  echo '<li class="list-group-item">No tenés citas próximas.</li>';
+                } else {
+                  while($row = $res->fetch_assoc()){
+                    echo '<li class="list-group-item d-flex justify-content-between align-items-center">';
+                    echo '<div><strong>'.htmlspecialchars($row["motivo"]).'</strong><br><small>'.$row["fecha_cita"].'</small></div>';
+                    echo '<span class="badge bg-secondary">'.$row["estado"].'</span>';
+                    echo '</li>';
+                  }
                 }
+              } catch (Exception $e) {
+                echo '<li class="list-group-item text-danger">No se pudieron cargar las citas.</li>';
+              } finally {
+                if (isset($cn)) cerrarConexion($cn);
               }
-            } catch (Exception $e) {
-              echo '<li class="list-group-item text-danger">No se pudieron cargar las citas.</li>';
-            } finally {
-              if (isset($cn)) cerrarConexion($cn);
-            }
-          ?>
+            ?>
           </ul>
         </div>
       </div>

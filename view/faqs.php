@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['id_rol'])) {
+  header("Location: login.php?error=" . urlencode("Inicie sesión para continuar."));
+  exit;
+}
+
+$rol = $_SESSION['id_rol'];
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -86,44 +97,38 @@
 
 <body>
 
-  <?php
-  session_start();
-  $rol = $_SESSION['id_rol'] ?? null;
-  ?>
+<nav class="navbar navbar-expand-lg px-4">
+  <a class="navbar-brand" href="index.php">
+    <img src="../public/logo.jpg" alt="REDCUDI Logo">
+  </a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div id="nav" class="collapse navbar-collapse justify-content-end">
+    <ul class="navbar-nav">
+      <?php if ($rol == 1): ?>
+        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
+        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+        <li class="nav-item"><a class="nav-link" href="programas.php">Programas Educativos</a></li>
+        <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
 
-  <nav class="navbar navbar-expand-lg px-4">
-    <a class="navbar-brand" href="index.php">
-      <img src="../public/logo.jpg" alt="REDCUDI Logo">
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div id="nav" class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a
-            class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'recomendaciones.php' ? ' active' : '' ?>"
-            href="recomendaciones.php">Recomendaciones</a></li>
-        <li class="nav-item"><a
-            class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'matricula.php' ? ' active' : '' ?>"
-            href="matricula.php">Matrícula</a></li>
-        <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'faqs.php' ? ' active' : '' ?>"
-            href="faqs.php">FAQs</a></li>
-        <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'citas.php' ? ' active' : '' ?>"
-            href="citas.php">Citas</a></li>
-        <?php if ($rol != 2): ?>
-          <li class="nav-item"><a
-              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'programas.php' ? ' active' : '' ?>"
-              href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a
-              class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'tablas/listaProgramas.php' ? ' active' : '' ?>"
-              href="tablas/listaProgramas.php">Lista de Programas</a></li>
-        <?php endif; ?>
-        <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'contacto.php' ? ' active' : '' ?>"
-            href="contacto.php">Contacto</a></li>
-      </ul>
-    </div>
-  </nav>
+      <?php elseif ($rol == 2):?>
+        <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
+        <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
+        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+        <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
 
+      <?php elseif ($rol == 3):?>
+        <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+      <?php endif; ?>
+    </ul>
+  </div>
+</nav>
 
   <section class="page-header container">
     <h1>Preguntas <span class="brand-accent">Frecuentes</span></h1>
@@ -136,8 +141,7 @@
   </div>
 
   <div class="container">
-    <div class="accordion" id="faqs">
-    </div>
+    <div class="accordion" id="faqs"></div>
   </div>
 
   <footer>
@@ -193,7 +197,7 @@
       });
     });
   </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

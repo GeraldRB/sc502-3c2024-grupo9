@@ -117,7 +117,7 @@ $ok = isset($_GET['success']);
   </button>
   <div id="nav" class="collapse navbar-collapse justify-content-end">
     <ul class="navbar-nav">
-      <?php if ($rol == 1):?>
+      <?php if ($rol == 1): ?>
         <li class="nav-item"><a class="nav-link active" href="recomendaciones.php">Recomendaciones</a></li>
         <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
         <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>

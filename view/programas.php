@@ -110,26 +110,25 @@ $ok = isset($_GET['success']);
 
 <body class="bg-light">
 
-  <nav class="navbar navbar-expand-lg navbar-light px-4">
-    <a class="navbar-brand" href="#">
-      <img src="../public/logo.jpg" alt="REDCUDI Logo">
+  <nav class="navbar navbar-expand-lg px-4">
+    <a class="navbar-brand" href="index.php">
+      <img src="../public/logo.jpg" alt="Logo Guardería">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <div id="nav" class="collapse navbar-collapse justify-content-end">
       <ul class="navbar-nav">
         <?php if ($rol == 1 || $rol == 2): ?>
-          <li class="nav-item"><a class="nav-link" href="recomendaciones.php">Recomendaciones</a></li>
-          <li class="nav-item"><a class="nav-link" href="matricula.php">Matrícula</a></li>
-          <li class="nav-item"><a class="nav-link" href="faqs.php">FAQs</a></li>
-          <li class="nav-item"><a class="nav-link" href="citas.php">Citas</a></li>
-          <li class="nav-item"><a class="nav-link active" href="programas.php">Programas Educativos</a></li>
-          <li class="nav-item"><a class="nav-link" href="contacto.php">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'recomendaciones.php' ? ' active' : '' ?>" href="recomendaciones.php">Recomendaciones</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'matricula.php' ? ' active' : '' ?>" href="matricula.php">Matrícula</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'faqs.php' ? ' active' : '' ?>" href="faqs.php">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'citas.php' ? ' active' : '' ?>" href="citas.php">Citas</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contacto.php">Contacto</a></li>
         <?php endif; ?>
-
         <?php if ($rol == 1): ?>
-          <li class="nav-item"><a class="nav-link" href="tablas/listaProgramas.php">Lista de Programas</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'programas.php' ? ' active' : '' ?>" href="programas.php">Programas Educativos</a></li>
+          <li class="nav-item"><a class="nav-link<?= basename($_SERVER['PHP_SELF']) == 'listaProgramas.php' ? ' active' : '' ?>" href="tablas/listaProgramas.php">Lista de Programas</a></li>
         <?php endif; ?>
       </ul>
     </div>
